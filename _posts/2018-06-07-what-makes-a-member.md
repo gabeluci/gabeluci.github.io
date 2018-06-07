@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Active Directory: What makes a member a member?
+title: "Active Directory: What makes a member a member?"
 category: activedirectory
 ---
 
