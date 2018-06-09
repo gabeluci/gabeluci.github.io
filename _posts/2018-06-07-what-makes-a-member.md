@@ -1,10 +1,10 @@
 ---
 layout: default
-title: "Active Directory: What makes a member a member?"
-category: activedirectory
+title: "What makes a member a member?"
+category: "Active Directory"
 ---
 
-# Active Directory: What makes a member a member?
+# {{page.category}}: {{page.title}}
 
 This is the first article in a series about programming with Active Directory.
 
@@ -44,9 +44,9 @@ A group can have members from external, trusted domains. This is done by updatin
 
 When a user from an external domain is added to a group, a Foreign Security Principal (FSP) object is created. Every domain has a `ForeignSecurityPrincipals` container at the root of the , and that's where these are stored.
 
-> Fun fact: a "container" is different from an "organizational unit" (OU). One has an `objectClass` of `container`, the other has `organizationalUnit`. The function much the same: you can put all the same objects inside. The only difference is that group policies can only be applied to OUs.
+> Fun fact: a "container" is different from an "organizational unit" (OU). One has an `objectClass` of `container`, the other has `organizationalUnit`. They function much the same: you can put all the same objects inside. The only difference is that group policies can only be applied to OUs.
 
-That FSP is named after the SID of the user on the external domain. The `distinguishedName` of the FSP object can then be added to the `member` attribute of the group, which makes the external user a member of that group.
+That FSP is named after the SID of the user on the external domain. The `distinguishedName` of the FSP object is then be added to the `member` attribute of the group, which makes the external user a member of that group.
 
 This can only be done with groups with a scope of Domain Local.
 
