@@ -2,6 +2,7 @@
 layout: default
 title: "What makes a member a member?"
 category: "Active Directory"
+permalink: /active-directory/:year/:month/:day/:title:output_ext
 ---
 
 # {{page.category}}: {{page.title}}
@@ -59,4 +60,4 @@ For exmaple,
 - **Are you only working with groups that you know are never anyone's Primary Group?** Don't bother with the `primaryGroupId`.
 - **Are you working in a single-domain environment that trusts no one?** Don't worry about Foreign Seucirty Principals.
 
-My other articles about finding all the members of a group
+My other articles in this series will cover how you can do this.

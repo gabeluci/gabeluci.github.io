@@ -2,10 +2,12 @@
 layout: default
 title: "Finding all of a user's groups"
 category: "Active Directory"
-published: false
+permalink: /active-directory/:year/:month/:day/:title:output_ext
 ---
 
 # {{page.category}}: {{page.title}}
+
+> If you just want to see the code, scroll down to the bottom (if it's not there yet, it's coming).
 
 In this article, I'll go over how to find all of the groups that a user is a member of in .NET - specifically, C#. It's first important to understand how a user even becomes a member of a group - it's not as straight-forward as you may think. So if you haven't already, read that article first:
 
@@ -20,14 +22,16 @@ Well, maybe. Groups only get added to `memberOf` if they have a Group Scope of:
 1. Universal and are in the same AD forest as the user, or
 2. Global and are on the same domain.
 
-Groups _do not_ get added to `memberOf` if they have a Group Scope of Global and are on another domain (even if in the same forest). The `memberOf` attribute will report Domain Local groups on the same domain as the user, but only if you retrieve the results from a domain controller or global catalog on the same domain.
+Groups _do not_ get added to `memberOf` if they have a Group Scope of Global and are on another domain (even if in the same forest).
 
-It will also not report the user's primary group (usually `Domain Users`), if that's important to you.
+On top of that, `memberOf` will only include Domain Local groups from the domain of the domain controller or global catalog you are retrieving results from.
 
-Does this mean you can never rely on `memberOf`? No. It's perfectly appropriate if:
+It will also not report the user's primary group (usually `Domain Users`), if that's important to you, nor will it include groups on external trusted domains.
+
+Does this mean you can _never_ rely on `memberOf`? No. It's perfectly appropriate if:
 
 1. You're working in a single-domain environment, or
-2. You are sure you only care about Universal groups (such as distribution lists)
+2. You're working in a single-forest environment and you are sure you only care about Universal groups (such as distribution lists)
 
 If `memberOf` is good enough for you, then use it! It will be the quickest way.
 
@@ -41,16 +45,18 @@ A recursive search for every group is time consuming. If you already know the na
 
 > [Find out if one user is a member of one group]()
 
-## AccountManagement namespace
+## The code
 
-The `System.DirectoryServices.AccountManagement` namespace makes this easy for us. Let's say we already have a `UserPrincipal` object called `user` for the user object in question. We can just do this:
+### `AccountManagement` namespace
 
-    var authorizationGroups = user.GetAuthorizationGroups();
-    //or
+The `System.DirectoryServices.AccountManagement` namespace makes this easy for us. Let's say we already have a `UserPrincipal` object called `user` for the user object in question. If we want to get just the user's immediate groups, we can just do this:
+
     var groups = user.GetGroups();
 
-The `GetAuthorizationGroups()` method does a recursive search for only security groups, whereas `GetGroups()` only gets the security or distribution groups that the user is an immediate member of.
+The `GetGroups()` method uses the `memberOf` attribute, so it has the limitations stated above. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
 
-That was easy, right? But there's a catch. There is a performance cost to this that you may be able to avoid. These methods do a few things:
+There is also a separate method for authentication groups:
 
-1. 
+    var authorizationGroups = user.GetAuthorizationGroups();
+
+
