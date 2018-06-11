@@ -47,16 +47,21 @@ A recursive search for every group is time consuming. If you already know the na
 
 ## The code
 
-### `AccountManagement` namespace
+### `System.DirectoryServices.AccountManagement`
 
-The `System.DirectoryServices.AccountManagement` namespace makes this easy for us. Let's say we already have a `UserPrincipal` object called `user` for the user object in question. If we want to get just the user's immediate groups, we can just do this:
+The `AccountManagement` namespace makes this easy for us. Let's say we already have a `UserPrincipal` object called `user` for the user object in question. If we want to get just the user's immediate groups, we can just do this:
 
     var groups = user.GetGroups();
 
-The `GetGroups()` method uses the `memberOf` attribute, so it has the limitations stated above. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
+The `GetGroups()` method uses the `memberOf` attribute, so **it has the limitations stated above**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
 
-There is also a separate method for authentication groups:
+There is also a separate method for authentication groups (only Security groups, recursive):
 
     var authorizationGroups = user.GetAuthorizationGroups();
 
+The `GetAuthorizationGroups()` method can work in one of two ways:
 
+1. If the computer you run the method from is joined to a domain that is fully trusted by the domain the user account is on, then it uses the native Windows [Authz API](https://msdn.microsoft.com/en-us/library/windows/desktop/ff394773%28v=vs.85%29.aspx).
+2. Otherwise, it reads the [`tokenGroups`](https://msdn.microsoft.com/en-us/library/ms680275(v=vs.85).aspx) attribute on the account, which is a constructed attribute that lists the SIDs of authorization groups for the user.
+
+> Constructed attributes - like [`tokenGroups`](https://msdn.microsoft.com/en-us/library/ms680275(v=vs.85).aspx), [`canonicalName`](https://msdn.microsoft.com/en-us/library/ms675436%28v=vs.85%29.aspx), [`msDS-PrincipalName`](https://msdn.microsoft.com/en-us/library/ms677470(v=vs.85).aspx) and others - are not stored. These attributes are only given to you when you ask, and their values are calculated at the time you ask for them. For this reason, you cannot use these attributes in a search query.
