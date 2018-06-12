@@ -49,19 +49,61 @@ A recursive search for every group is time consuming. If you already know the na
 
 ### `System.DirectoryServices.AccountManagement`
 
-The `AccountManagement` namespace makes this easy for us. Let's say we already have a `UserPrincipal` object called `user` for the user object in question. If we want to get just the user's immediate groups, we can just do this:
+The `AccountManagement` namespace makes this easy for us. Let's say we already have a `UserPrincipal` object called `user` for the user object in question. If we want to get just the user's immediate groups, we can do this:
 
     var groups = user.GetGroups();
 
 The `GetGroups()` method uses the `memberOf` attribute, so **it has the limitations stated above**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
 
-There is also a separate method for authentication groups (only Security groups, recursive):
+There is also a separate method for authentication groups:
 
     var authorizationGroups = user.GetAuthorizationGroups();
 
-The `GetAuthorizationGroups()` method can work in one of two ways:
+The `GetAuthorizationGroups()` method will give you **only Security Groups** (not Distribution Lists) that the user is a member of, as well as all the groups those groups are in, etc. It will include Domain Local groups on the same domain as the user.
+
+If you're curious, this method works in one of two ways:
 
 1. If the computer you run the method from is joined to a domain that is fully trusted by the domain the user account is on, then it uses the native Windows [Authz API](https://msdn.microsoft.com/en-us/library/windows/desktop/ff394773%28v=vs.85%29.aspx).
 2. Otherwise, it reads the [`tokenGroups`](https://msdn.microsoft.com/en-us/library/ms680275(v=vs.85).aspx) attribute on the account, which is a constructed attribute that lists the SIDs of authorization groups for the user.
 
-> Constructed attributes - like [`tokenGroups`](https://msdn.microsoft.com/en-us/library/ms680275(v=vs.85).aspx), [`canonicalName`](https://msdn.microsoft.com/en-us/library/ms675436%28v=vs.85%29.aspx), [`msDS-PrincipalName`](https://msdn.microsoft.com/en-us/library/ms677470(v=vs.85).aspx) and others - are not stored. These attributes are only given to you when you ask, and their values are calculated at the time you ask for them. For this reason, you cannot use these attributes in a search query.
+> Constructed attributes - like [`tokenGroups`](https://msdn.microsoft.com/en-us/library/ms680275(v=vs.85).aspx), [`canonicalName`](https://msdn.microsoft.com/en-us/library/ms675436%28v=vs.85%29.aspx), [`msDS-PrincipalName`](https://msdn.microsoft.com/en-us/library/ms677470(v=vs.85).aspx) and others - are not stored. These attributes are only given to you when you ask, and their values are calculated at the time you ask for them. For this reason, you cannot use these attributes in a query.
+
+Note that I have seen `GetAuthorizationGroups()` return `Everyone`, but not all the time. I believe this only happens when the Authz method is used, and only when the computer you run it from is on the same domain as the user, but I haven't been able to confirm this yet.
+
+### `System.DirectoryServices`
+
+If you're willing to do a little extra work, you can get much better performance by using `DirectoryEntry` and `DirectorySearcher` directly.
+
+#### Using `memberOf`
+
+Here is a method that will use the `memberOf` attribute and return the name of each group. These methods assume you already have a `DirectoryEntry` object for the user in question.
+
+{% highlight c# %}
+private static IEnumerable<string> GetUserMemberOf(DirectoryEntry de) {
+    var groups = new List<string>();
+
+    de.RefreshCache(new[] {"memberOf"});
+
+    while (true) {
+        var memberOf = de.Properties["memberOf"];
+        foreach (var group in memberOf) {
+            var groupDe = new DirectoryEntry($"LDAP://{group}");
+            groupDe.RefreshCache(new[] {"cn"});
+            groups.Add(groupDe.Properties["cn"].Value as string);
+        }
+
+        //AD only gives us 1000 or 1500 at a time (depending on the server version)
+        //so if we've hit that, go see if there are more
+        if (memberOf.Count != 1500 && memberOf.Count != 1000) break;
+
+        try {
+            de.RefreshCache(new[] {$"memberOf;range={groups.Count}-*"});
+        } catch (COMException e) {
+            if (e.ErrorCode == unchecked((int) 0x80072020)) break; //no more results
+
+            throw;
+        }
+    }
+    return groups;
+}
+{% endhighlight %}
