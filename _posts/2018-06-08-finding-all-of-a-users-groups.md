@@ -51,15 +51,23 @@ A recursive search for every group is time consuming. If you already know the na
 
 The `AccountManagement` namespace makes this easy for us. Let's say we already have a `UserPrincipal` object called `user` for the user object in question. If we want to get just the user's immediate groups, we can do this:
 
-    var groups = user.GetGroups();
+```c#
+using (var groups = user.GetGroups()) {
+    //do something
+}
+```
 
-The `GetGroups()` method uses the `memberOf` attribute, so **it has the limitations stated above**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
+The [`GetGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.principal.getgroups) method uses the `memberOf` attribute, so **it has the limitations stated above**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
 
 There is also a separate method for authentication groups:
 
-    var authorizationGroups = user.GetAuthorizationGroups();
+```c#
+using (var authorizationGroups = user.GetAuthorizationGroups()) {
+    //do something
+}
+```
 
-The `GetAuthorizationGroups()` method will give you **only Security Groups** (not Distribution Lists) that the user is a member of, as well as all the groups those groups are in, etc. It will include Domain Local groups on the same domain as the user.
+The [`GetAuthorizationGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.userprincipal.getauthorizationgroups) method will give you **only Security Groups** (not Distribution Lists) that the user is a member of, as well as all the groups those groups are in, etc. It will include Domain Local groups on the same domain as the user.
 
 If you're curious, this method works in one of two ways:
 
@@ -70,15 +78,17 @@ If you're curious, this method works in one of two ways:
 
 Note that I have seen `GetAuthorizationGroups()` return `Everyone`, but not all the time. I believe this only happens when the Authz method is used, and only when the computer you run it from is on the same domain as the user, but I haven't been able to confirm this yet.
 
+> Both of these methods return [`PrincipalSearchResult`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.principalsearchresult-1) objects, which implements `IDisposible`. Thus, they should be used in `using` statements, or you should call `.Dispose()` on the result when you're done with it.
+
 ### `System.DirectoryServices`
 
-If you're willing to do a little extra work, you can get much better performance by using `DirectoryEntry` and `DirectorySearcher` directly.
+If you're willing to do a little extra work, you can get much better performance by using `DirectoryEntry` and `DirectorySearcher` directly. These examples assume you already have a `DirectoryEntry` object for the user in question.
 
 #### Using `memberOf`
 
-Here is a method that will use the `memberOf` attribute and return the name of each group. These methods assume you already have a `DirectoryEntry` object for the user in question.
+Here is a method that will use the `memberOf` attribute and return the name of each group.
 
-{% highlight c# %}
+```c#
 private static IEnumerable<string> GetUserMemberOf(DirectoryEntry de) {
     var groups = new List<string>();
 
@@ -106,4 +116,4 @@ private static IEnumerable<string> GetUserMemberOf(DirectoryEntry de) {
     }
     return groups;
 }
-{% endhighlight %}
+```
