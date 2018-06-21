@@ -19,19 +19,19 @@ You may be tempted to just use the `memberOf` attribute of the user. That's what
 
 Well, maybe. Groups only get added to `memberOf` if they have a Group Scope of:
 
-1. Universal and are in the same AD forest as the user, or
-2. Global and are on the same domain.
+1. **Universal** and are in the same AD forest as the user, or
+2. **Global** and are on the same domain.
 
-Groups _do not_ get added to `memberOf` if they have a Group Scope of Global and are on another domain (even if in the same forest).
+Groups _do not_ get added to `memberOf` if they have a Group Scope of **Global and are on another domain** (even if in the same forest).
 
-On top of that, `memberOf` will only include Domain Local groups from the domain of the domain controller or global catalog you are retrieving results from.
+On top of that, `memberOf` will only include **Domain Local groups from the same domain** of the domain controller or global catalog you are retrieving results from.
 
-It will also not report the user's primary group (usually `Domain Users`), if that's important to you, nor will it include groups on external trusted domains.
+It will also not report the user's **primary group** (usually `Domain Users`), if that's important to you, nor will it include groups on external trusted domains.
 
 Does this mean you can _never_ rely on `memberOf`? No. It's perfectly appropriate if:
 
-1. You're working in a single-domain environment, or
-2. You're working in a single-forest environment and you are sure you only care about Universal groups (such as distribution lists)
+1. You're working in a **single-domain** environment, or
+2. You're working in a **single-forest** environment and you are sure you only care about Universal groups (such as distribution lists)
 
 If `memberOf` is good enough for you, then use it! It will be the quickest way.
 
@@ -82,7 +82,11 @@ Note that I have seen `GetAuthorizationGroups()` return `Everyone`, but not all 
 
 ### `System.DirectoryServices`
 
-If you're willing to do a little extra work, you can get much better performance by using `DirectoryEntry` and `DirectorySearcher` directly. These examples assume you already have a `DirectoryEntry` object for the user in question.
+If you're willing to do a little extra work, you can get much better performance by using `DirectoryEntry` and `DirectorySearcher` directly (the `AccountManagement` namespace uses those in the background anyway).
+
+None of these examples will likely be exactly what you need. You may be starting with different information about the user account (maybe just a `distinguishedName` or the `sAMAccountName`), or you may need to come away with different values. Modify these examples as needed. You may even want to combine several of these examples together.
+
+For simplicity, these examples assume you already have a `DirectoryEntry` object for the user in question.
 
 #### Using `memberOf`
 
@@ -92,12 +96,13 @@ Here is a method that will use the `memberOf` attribute and return the name of e
 private static IEnumerable<string> GetUserMemberOf(DirectoryEntry de) {
     var groups = new List<string>();
 
+    //retrieve only the memberOf attribute from the user
     de.RefreshCache(new[] {"memberOf"});
 
     while (true) {
         var memberOf = de.Properties["memberOf"];
-        foreach (var group in memberOf) {
-            var groupDe = new DirectoryEntry($"LDAP://{group}");
+        foreach (string group in memberOf) {
+            var groupDe = new DirectoryEntry($"LDAP://{group.Replace("/", "\\/")}");
             groupDe.RefreshCache(new[] {"cn"});
             groups.Add(groupDe.Properties["cn"].Value as string);
         }
@@ -115,5 +120,29 @@ private static IEnumerable<string> GetUserMemberOf(DirectoryEntry de) {
         }
     }
     return groups;
+}
+```
+
+#### The primary group
+
+This method will return the name of a user's primary group.
+
+```c#
+private static string GetUserPrimaryGroup(DirectoryEntry de) {
+    de.RefreshCache(new[] {"primaryGroupID", "objectSid"});
+
+    //Get the user's SID as a string
+    var sid = new SecurityIdentifier((byte[])de.Properties["objectSid"][0], 0).Value;
+
+    //Replace the RID portion of the user's SID with the primaryGroupId
+    //so we're left with the group's SID
+    sid = sid.Remove(sid.LastIndexOf("-", StringComparison.Ordinal) + 1);
+    sid = sid + de.Properties["primaryGroupId"].Value;
+
+    //Find the group by its SID
+    var group = new DirectoryEntry($"LDAP://<SID={sid}>");
+    group.RefreshCache(new [] {"cn"});
+
+    return group.Properties["cn"].Value as string;
 }
 ```
