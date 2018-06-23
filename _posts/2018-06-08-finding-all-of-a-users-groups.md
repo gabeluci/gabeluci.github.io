@@ -146,3 +146,77 @@ private static string GetUserPrimaryGroup(DirectoryEntry de) {
     return group.Properties["cn"].Value as string;
 }
 ```
+
+#### Everything everything
+
+None of the methods we've described so far will find **Domain Local groups** on other domains, or **any groups on external trusted domains**. To find those, you need to perform the search on each domain individually. The method below does that. It will find every group that `memberOf` will find, plus more.
+
+Since some of these are groups on other domains, this method will return a list of the `msDS-PrincipalName` attribute of the groups, which is the `DOMAIN\sAMAccountName` format.
+
+Notice that there are two parts to this method:
+
+1. Searching each domain in the forest: the user's `distinguishedName` will appear in the `member` attribute of the groups.
+2. Searching external trusted domains: the `distinguishedName` of a Foreign Security Principal object containing the user's SID will appear in the `member` attribute of the groups.
+
+Note that you will need to run this with credentials that are trusted on every domain that this touches.
+
+```c#
+private static IEnumerable<string> GetUsersGroupsAllDomains(DirectoryEntry de) {
+    var groups = new List<string>();
+
+    de.RefreshCache(new [] {"canonicalName", "objectSid", "distinguishedName"});
+
+    var userCn = (string) de.Properties["canonicalName"].Value;
+    var domainDns = userCn.Substring(0, userCn.IndexOf("/", StringComparison.Ordinal));
+
+    var d = Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainDns));
+    var searchedDomains = new List<string>();
+
+    //search domains in the same forest (this will include the user's domain)
+    var userDn = (string) de.Properties["distinguishedName"].Value;
+    foreach (Domain domain in d.Forest.Domains) {
+        searchedDomains.Add(domain.Name);
+        var ds = new DirectorySearcher {
+            SearchRoot = new DirectoryEntry($"LDAP://{domain.Name}"),
+            Filter = $"(&(objectclass=group)(member={userDn}))"
+        };
+        ds.PropertiesToLoad.Add("msDS-PrincipalName");
+        using (var results = ds.FindAll()) {
+            foreach (SearchResult result in results) {
+                groups.Add((string) result.Properties["msDS-PrincipalName"][0]);
+            }
+        }
+    }
+
+    //search any externally trusted domains
+    var trusts = d.GetAllTrustRelationships();
+    if (trusts.Count == 0) return groups;
+
+    var userSid = new SecurityIdentifier((byte[]) de.Properties["objectSid"][0], 0).Value;
+    foreach (TrustRelationshipInformation trust in trusts) {
+        //ignore domains in the same forest that we already searched, or outbound trusts
+        if (searchedDomains.Contains(trust.TargetName) || trust.TrustDirection == TrustDirection.Outbound) continue;
+        var domain = new DirectoryEntry($"LDAP://{trust.TargetName}");
+        domain.RefreshCache(new [] {"distinguishedName"});
+        var domainDn = (string) domain.Properties["distinguishedName"].Value;
+
+        //construct the DN of what the foreign security principal object would be
+        var fsp = $"CN={userSid},CN=ForeignSecurityPrincipals,{domainDn}";
+
+        var ds = new DirectorySearcher {
+            SearchRoot = domain,
+            Filter = $"(&(objectclass=group)(member={fsp}))"
+        };
+        ds.PropertiesToLoad.Add("msDS-PrincipalName");
+        using (var results = ds.FindAll()) {
+            foreach (SearchResult result in results) {
+                groups.Add((string) result.Properties["msDS-PrincipalName"][0]);
+            }
+        }
+    }
+
+    return groups;
+}
+```
+
+The code that looks for the domains (like `Domain.GetDomain`, `d.Forest.Domains`, and `d.GetAllTrustRelationships()`) make calls out to AD to find that information. To gain performance, you can either hard-code the domain names in (if your code will only be run in one AD environment) or cache them the first time you find them.
