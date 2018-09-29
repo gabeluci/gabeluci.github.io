@@ -43,9 +43,9 @@ If you are working with a domain that trusts other domains outside of the same A
 
 A group can have members from external, trusted domains. This is done by updating the `member` attribute of the group, but _not_ with the `distinguishedName` of the user.
 
-When a user from an external domain is added to a group, a Foreign Security Principal (FSP) object is created. Every domain has a `ForeignSecurityPrincipals` container at the root of the , and that's where these are stored.
+When a user from an external domain is added to a group, a Foreign Security Principal (FSP) object is created. Every domain has a `ForeignSecurityPrincipals` container at the root of the domain, and that's where these are stored.
 
-> Fun fact: a "container" is different from an "organizational unit" (OU). One has an `objectClass` of `container`, the other has `organizationalUnit`. They function much the same: you can put all the same objects inside. The only difference is that group policies can only be applied to OUs.
+> Fun fact: a "container" is different from an "organizational unit" (OU). One has an `objectClass` of `container`, the other, `organizationalUnit`. They function much the same: you can put all the same objects inside. The only difference is that group policies can only be applied to OUs.
 
 That FSP is named after the SID of the user on the external domain. The `distinguishedName` of the FSP object is then be added to the `member` attribute of the group, which makes the external user a member of that group.
 
@@ -53,7 +53,7 @@ This can only be done with groups with a scope of Domain Local.
 
 ## Why do I care?
 
-This knowledge comes is valuable for performance in your code. If you can make assumptions about the groups and users you are working with, then you may be able to ignore Primary Groups or Foreign Security Principals, and thus save time.
+This knowledge is valuable for performance in your code. If you can make assumptions about the groups and users you are working with, then you may be able to ignore Primary Groups or Foreign Security Principals, and thus save time.
 
 For exmaple,
 

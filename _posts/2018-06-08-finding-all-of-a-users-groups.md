@@ -7,9 +7,9 @@ permalink: /active-directory/:year/:month/:day/:title:output_ext
 
 # {{page.category}}: {{page.title}}
 
-> If you just want to see the code, scroll down to the bottom (if it's not there yet, it's coming).
+In this article, I'll go over how to find all of the groups that a user is a member of. While the code is in C#, the principals can be applied to any language that can make LDAP queries.
 
-In this article, I'll go over how to find all of the groups that a user is a member of in .NET - specifically, C#. It's first important to understand how a user even becomes a member of a group - it's not as straight-forward as you may think. So if you haven't already, read that article first:
+It's first important to understand how a user even becomes a member of a group - it's not as straight-forward as you may think. So if you haven't already, read that article first:
 
 > [What makes a member a member?]({% post_url 2018-06-07-what-makes-a-member %})
 
@@ -24,11 +24,11 @@ Well, maybe. Groups only get added to `memberOf` if they have a Group Scope of:
 
 Groups _do not_ get added to `memberOf` if they have a Group Scope of **Global and are on another domain** (even if in the same forest).
 
-On top of that, `memberOf` will only include **Domain Local groups from the same domain** of the domain controller or global catalog you are retrieving results from.
+On top of that, `memberOf` will only include **Domain Local groups from the same domain of the server** you are retrieving results from.
 
-It will also not report the user's **primary group** (usually `Domain Users`), if that's important to you, nor will it include groups on external trusted domains.
+It will also not report the user's **primary group** (usually `Domain Users`), if that's important to you, nor will it include **groups on external trusted domains**.
 
-Does this mean you can _never_ rely on `memberOf`? No. It's perfectly appropriate if:
+Does this mean you can *never* rely on `memberOf`? No. It's perfectly appropriate if:
 
 1. You're working in a **single-domain** environment, or
 2. You're working in a **single-forest** environment and you are sure you only care about Universal groups (such as distribution lists)
@@ -43,7 +43,7 @@ The reason why you want to know all of the user's groups may change your approac
 
 A recursive search for every group is time consuming. If you already know the name of the group(s) you're looking for, then you are better off narrowing your search to just that group. I go into that in another article:
 
-> [Find out if one user is a member of one group]()
+> [Find out if one user is a member of a group]({% post_url 2018-09-13-one-user-is-member-of-a-group %})
 
 ## The code
 
@@ -59,7 +59,7 @@ using (var groups = user.GetGroups()) {
 
 The [`GetGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.principal.getgroups) method uses the `memberOf` attribute, so **it has the limitations stated above**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
 
-There is also a separate method for authentication groups:
+There is also a separate method for authorization groups:
 
 ```c#
 using (var authorizationGroups = user.GetAuthorizationGroups()) {
@@ -72,7 +72,7 @@ The [`GetAuthorizationGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/sys
 If you're curious, this method works in one of two ways:
 
 1. If the computer you run the method from is joined to a domain that is fully trusted by the domain the user account is on, then it uses the native Windows [Authz API](https://msdn.microsoft.com/en-us/library/windows/desktop/ff394773%28v=vs.85%29.aspx).
-2. Otherwise, it reads the [`tokenGroups`](https://msdn.microsoft.com/en-us/library/ms680275(v=vs.85).aspx) attribute on the account, which is a constructed attribute that lists the SIDs of authorization groups for the user.
+2. Otherwise, it reads the [`tokenGroups`](https://msdn.microsoft.com/en-us/library/ms680275(v=vs.85).aspx) attribute on the AD object, which is a constructed attribute that lists the SIDs of authorization groups for the user.
 
 > Constructed attributes - like [`tokenGroups`](https://msdn.microsoft.com/en-us/library/ms680275(v=vs.85).aspx), [`canonicalName`](https://msdn.microsoft.com/en-us/library/ms675436%28v=vs.85%29.aspx), [`msDS-PrincipalName`](https://msdn.microsoft.com/en-us/library/ms677470(v=vs.85).aspx) and others - are not stored. These attributes are only given to you when you ask, and their values are calculated at the time you ask for them. For this reason, you cannot use these attributes in a query.
 
@@ -132,7 +132,7 @@ private static string GetUserPrimaryGroup(DirectoryEntry de) {
     de.RefreshCache(new[] {"primaryGroupID", "objectSid"});
 
     //Get the user's SID as a string
-    var sid = new SecurityIdentifier((byte[])de.Properties["objectSid"][0], 0).Value;
+    var sid = new SecurityIdentifier((byte[])de.Properties["objectSid"].Value, 0).ToString();
 
     //Replace the RID portion of the user's SID with the primaryGroupId
     //so we're left with the group's SID
@@ -158,7 +158,7 @@ Notice that there are two parts to this method:
 1. Searching each domain in the forest: the user's `distinguishedName` will appear in the `member` attribute of the groups.
 2. Searching external trusted domains: the `distinguishedName` of a Foreign Security Principal object containing the user's SID will appear in the `member` attribute of the groups.
 
-Note that you will need to run this with credentials that are trusted on every domain that this touches.
+Note that you will need to run this with credentials that are trusted on every domain that this touches, otherwise it will throw exceptions.
 
 ```c#
 private static IEnumerable<string> GetUsersGroupsAllDomains(DirectoryEntry de) {
@@ -192,7 +192,7 @@ private static IEnumerable<string> GetUsersGroupsAllDomains(DirectoryEntry de) {
     var trusts = d.GetAllTrustRelationships();
     if (trusts.Count == 0) return groups;
 
-    var userSid = new SecurityIdentifier((byte[]) de.Properties["objectSid"][0], 0).Value;
+    var userSid = new SecurityIdentifier((byte[]) de.Properties["objectSid"].Value, 0).ToString();
     foreach (TrustRelationshipInformation trust in trusts) {
         //ignore domains in the same forest that we already searched, or outbound trusts
         if (searchedDomains.Contains(trust.TargetName) || trust.TrustDirection == TrustDirection.Outbound) continue;
