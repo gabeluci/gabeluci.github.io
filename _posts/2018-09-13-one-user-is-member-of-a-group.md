@@ -58,11 +58,13 @@ private static bool IsUserInGroup(DirectoryEntry user, DirectoryEntry group, boo
     var groupDn = (string) group.Properties["distinguishedName"].Value;
 
     if (((int) group.Properties["groupType"].Value & 8) == 0) {
-        //It's a Domain Local group, which means it can have users from external trusted domains
-        //so the account might show up as a Foreign Security Principal
-        var groupDomainDn = groupDn.Substring(groupDn.IndexOf(",DC=", StringComparison.Ordinal));
+        //It's a Domain Local group, which means it can have users from external trusted
+        //domains, so the account might show up as a Foreign Security Principal
+        var groupDomainDn = groupDn.Substring(
+            groupDn.IndexOf(",DC=", StringComparison.Ordinal));
         var sid = new SecurityIdentifier((byte[]) user.Properties["objectSid"].Value, 0);
-        filter = $"(|{filter}(member{recursiveFilter}=CN={sid},CN=ForeignSecurityPrincipals{groupDomainDn}))";
+        filter =
+            $"(|{filter}(member{recursiveFilter}=CN={sid},CN=ForeignSecurityPrincipals{groupDomainDn}))";
     }
 
     var searcher = new DirectorySearcher {
@@ -101,12 +103,16 @@ private static bool IsUserPrimaryGroup(DirectoryEntry user, DirectoryEntry group
     group.RefreshCache(new[] {"objectSid"});
 
     //Get the SID's as a string
-    var userSid = new SecurityIdentifier((byte[])user.Properties["objectSid"].Value, 0).ToString();
-    var groupSid = new SecurityIdentifier((byte[])group.Properties["objectSid"].Value, 0).ToString();
+    var userSid =
+        new SecurityIdentifier((byte[])user.Properties["objectSid"].Value, 0).ToString();
+    var groupSid =
+        new SecurityIdentifier((byte[])group.Properties["objectSid"].Value, 0).ToString();
 
     //Replace the RID portion of the user's SID with the primaryGroupId
     //so we're left with the primary group's SID
-    var primaryGroupSid = userSid.Remove(userSid.LastIndexOf("-", StringComparison.Ordinal) + 1) + user.Properties["primaryGroupId"].Value;
+    var primaryGroupSid =
+        userSid.Remove(userSid.LastIndexOf("-", StringComparison.Ordinal) + 1)
+        + user.Properties["primaryGroupId"].Value;
 
     return groupSid == primaryGroupSid;
 }

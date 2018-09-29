@@ -225,6 +225,10 @@ li code,p code {
     white-space: nowrap
 }
 
+a code {
+  color: inherit;
+}
+
 pre {
 	padding: 4px 12px;
   background: #FDFEFB;
@@ -272,11 +276,11 @@ td {
 /* Header */
 
 header {
-    background-color: #171717;
-    color: #FDFDFB;
-    width:180px;
-    float:left;
-    position:fixed;
+  background-color: #171717;
+  color: #FDFDFB;
+  width:180px;
+  float:left;
+  position:fixed;
 	border: 1px solid #000;
 	-webkit-border-top-right-radius: 4px;
 	-webkit-border-bottom-right-radius: 4px;
@@ -290,7 +294,8 @@ header {
 }
 
 p.header {
-	font-size: 16px;
+  font-size: 16px;
+  text-align: center;
 }
 
 h1.header {
@@ -299,7 +304,8 @@ h1.header {
 	font-weight: 300;
 	line-height: 1.3em;
 	border-bottom: none;
-	margin-top: 0;
+  margin: 0;
+  padding: 0;
 }
 
 
@@ -322,8 +328,11 @@ header ul {
 
 header li {
 	list-style-type: none;
-  width:132px;
-  height:15px;
+  /*width:132px;
+  height:15px;*/
+}
+header li a {
+  display: block;
 	margin-bottom: 12px;
 	line-height: 1em;
 	padding: 6px 6px 6px 7px;
@@ -344,7 +353,14 @@ header li {
 
 }
 
-header li:hover {
+header li a.current, header li a.current:hover {
+  background: inherit;
+  border: none;
+  box-shadow: none;
+}
+
+header li a:hover {
+  border: 1px solid #0D0D0D;;
 	background: #C3001D;
 	background: -moz-linear-gradient(top, #C3001D 0%, #950119 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(100%,#dddddd));

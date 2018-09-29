@@ -31,8 +31,20 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1 class="header">{{ site.title | default: site.github.repository_name }}</h1>
+        <h1 class="header"><a href="/">{{ site.title | default: site.github.repository_name }}</a></h1>
         <p class="header">{{ site.description | default: site.github.project_tagline }}</p>
+        {% if page.category %}
+          {% assign sorted_posts = site.categories[page.category] | sort: date %}
+          <ul>
+            {% for post in sorted_posts %}
+            {% assign current = nil %}
+            {% if page.title == post.title %}
+              {% assign current = "current" %}
+            {% endif %}
+            <li><a href="{{ site.url }}{{ site.baseurl }}{{  post.url }}" class="{{ current }}">{{  post.title }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
       </header>
 
       <section>
