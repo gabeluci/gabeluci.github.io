@@ -13,7 +13,7 @@ This article will discuss figuring out if a specific user is a member of a speci
 
 ## The easy way
 
-Whatever type of code you're writing, if you're using Windows Authentication, there will usually be a way to get an object for the currently-authenticated user. For example, in an ASP.NET application that is using Windows Authentication, you can use this to determine if the currently-authenticated user is a member of a group:
+Whatever type of code you're writing, if you're using Windows Authentication, there will usually be a way to get **an object for the currently-authenticated user**. For example, in an ASP.NET application that is using Windows Authentication, you can use this to determine if the currently-authenticated user is a member of a group:
 
 ```c#
 var isMember = HttpContext.Current.User.IsInRole("DOMAIN\\GroupName");
@@ -28,7 +28,7 @@ var isMember = principal.IsInRole("DOMAIN\\GroupName");
 
 Even if you're not using .NET, there will usually be some equivalent.
 
-.NET's [`WindowsPrincipal.IsInRole`](https://docs.microsoft.com/en-us/dotnet/api/system.security.principal.windowsprincipal.isinrole) is designed for testing authorization: whether a person should be granted permissions that are granted to the group. Thus, it does work for nested membership (if the account is a member of a group that is a member of the group in question). It is fairly quick too, since it uses the account's authentication token to test the membership, which is already in memory. If you're curious, under the hood it uses Windows' built-in function called [`CheckTokenMembership`](https://docs.microsoft.com/en-us/windows/desktop/api/securitybaseapi/nf-securitybaseapi-checktokenmembership).
+.NET's [`WindowsPrincipal.IsInRole`](https://docs.microsoft.com/en-us/dotnet/api/system.security.principal.windowsprincipal.isinrole) is designed for **testing authorization**: whether a person should be granted permissions that are granted to the group. Thus, it does work for nested membership (if the account is a member of a group that is a member of the group in question). It is fairly quick too, since it uses the account's authentication token to test the membership, which is already in memory. If you're curious, under the hood it uses Windows' built-in function called [`CheckTokenMembership`](https://docs.microsoft.com/en-us/windows/desktop/api/securitybaseapi/nf-securitybaseapi-checktokenmembership).
 
 **The caveat** is that `IsInRole` (or any method designed for authentication) will not work for groups that are:
 
@@ -39,10 +39,10 @@ Even if you're not using .NET, there will usually be some equivalent.
 
 While the following code is in C#, the principals used can usually be adapted to any language that can query LDAP. This method will work regardless of:
  
- - Group Type (Distribution List or Security Group)
- - Group Scope (Universal, Global or Domain Local)
- - Whether the group and user are on the same domain or not
- - Whether the user is on an external trusted domain or not
+ - **Group Type** (Distribution List or Security Group)
+ - **Group Scope** (Universal, Global or Domain Local)
+ - Whether the group and user are on the **same domain** or not
+ - Whether the user is on an external **trusted domain** or not
 
 ```c#
 private static bool IsUserInGroup(DirectoryEntry user, DirectoryEntry group, bool recursive) {
@@ -80,20 +80,20 @@ private static bool IsUserInGroup(DirectoryEntry user, DirectoryEntry group, boo
 }
 ```
 
-This method works by searching for groups that have the user as a member. But since we set the `SearchRoot` to the group itself, it is only possible for that one group to be returned. So the search has two possible outcomes:
+This method works by searching for groups that have the user as a member. But since we set **`SearchRoot` to the group itself**, it is only possible for that one group to be returned. So the search has two possible outcomes:
 
  1. If the user is a member, the group is returned
  2. Otherwise, nothing is returned
 
 Hence, we only need to test if *something* was returned.
 
-The `recursive` option works by using one of a few magic numbers called **Matching Rule OIDs**. This specific one (`1.2.840.113556.1.4.1941`) is called `LDAP_MATCHING_RULE_IN_CHAIN`. It can only be used on attributes that accept distinguished names (like `member`). It tells Active Directory to follow the chain of groups to find the user; for example, if the user is a member of a group that is a member of the group in question.
+The `recursive` option works by using one of a few magic numbers called **Matching Rule OIDs**. This specific one (`1.2.840.113556.1.4.1941`) is called `LDAP_MATCHING_RULE_IN_CHAIN`. It can only be used on attributes that accept distinguished names (like `member`). It tells Active Directory to **follow the chain of groups** to find the user; for example, if the user is a member of a group that is a member of the group in question.
 
 More information can be found on Microsoft's article on their LDAP [Search Filter Syntax](https://docs.microsoft.com/en-us/windows/desktop/adsi/search-filter-syntax).
 
 ## Primary Group
 
-If you read my [What makes a member a member?]({% post_url 2018-06-07-what-makes-a-member %}) article, then you'll know that a user's primary group is not governed by the `member` attribute of the group, so the above method won't work if you need to test if a group is the user's primary group. Granted, that's a pretty rare need, so you may be able to ignore this altogether.
+If you read my [What makes a member a member?]({% post_url 2018-06-07-what-makes-a-member %}) article, then you'll know that a user's **primary group is not governed by the `member` attribute** of the group, so the above method won't work if you need to test if a group is the user's primary group. Granted, that's a pretty rare need, so you may be able to ignore this altogether.
 
 But if you do need to find out if a group is a user's primary group, this is how you can do it:
 

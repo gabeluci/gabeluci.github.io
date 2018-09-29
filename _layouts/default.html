@@ -34,6 +34,7 @@
         <h1 class="header"><a href="/">{{ site.title | default: site.github.repository_name }}</a></h1>
         <p class="header">{{ site.description | default: site.github.project_tagline }}</p>
         {% if page.category %}
+          <hr>
           {% assign sorted_posts = site.categories[page.category] | sort: date %}
           <ul>
             {% for post in sorted_posts %}
