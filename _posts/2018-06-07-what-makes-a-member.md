@@ -58,6 +58,6 @@ This knowledge is valuable **for performance** in your code. If you can make ass
 For exmaple,
 
 - **Are you only working with groups that you know are never anyone's Primary Group?** Don't bother with the `primaryGroupId`.
-- **Are you working in a single-domain environment that trusts no one?** Don't worry about Foreign Seucirty Principals.
+- **Are you working in a single-domain environment that trusts no one?** Don't worry about Foreign Security Principals.
 
 My other articles in this series will cover how you can do this.
