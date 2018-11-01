@@ -7,7 +7,7 @@ permalink: /dotnet/:year/:month/:day/:title:output_ext
 
 # {{page.category}}: {{page.title}}
 
-Sometimes you need to run tasks in the background, which is job well-suited for Windows services;
+Sometimes you need to run tasks in the background, which is a job well-suited for Windows services;
 they're designed to stay running all the time. However, you will often want some kind of front-end
 to monitor what the service is doing. If your Windows service writes to a database, then you can use that:
 your front-end can just read from the database. But if not, you will want your front end to be able to
