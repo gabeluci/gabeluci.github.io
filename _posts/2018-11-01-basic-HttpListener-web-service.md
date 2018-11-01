@@ -21,13 +21,23 @@ something in ASP.NET, for example.
 
 In this example, I'll show you how to use that to create a simple web service in any application (like a Windows service) so other applications (like a website) can communicated with it.
 
+## Caveat
+
 Note that this example **does not provide any authentication mechanism**. It listens on `localhost`, so
 if your front-end is running on the same server, then this should work just fine as long as the port 
 you use for this is not exposed to the internet. Otherwise, you will have to implement some kind of authentication.
 It should be easy enough to inspect the HTTP header for an api key, for example.
 
+## What does it do?
+
 In this example, the service will either return its current settings via `GET http://localhost:8888/settings`,
 or accept new settings via `PUT http://localhost:8888/settings`. Otherwise it will return an `HTTP 404` response.
+
+## How to use
+
+To use this, call `WebService.StartWebServer()` when your application starts, and `WebService.StopWebServer()` to shut it down gracefully.
+The `StopWebServer()` method is written so that, if it happens to be currently processing a request, it will wait until it is done
+rather than kill it.
 
 ```c#
 using Newtonsoft.Json;
@@ -111,6 +121,7 @@ namespace MyService {
                     var handled = false;
                     switch (context.Request.Url.AbsolutePath) {
                         //This is where we do different things depending on the URL
+                        //TODO: Add cases for each URL we want to respond to
                         case "/settings":
                             switch (context.Request.HttpMethod) {
                                 case "GET":
