@@ -195,7 +195,8 @@ private static IEnumerable<string> GetUsersGroupsAllDomains(DirectoryEntry de) {
     var userSid = new SecurityIdentifier((byte[]) de.Properties["objectSid"].Value, 0).ToString();
     foreach (TrustRelationshipInformation trust in trusts) {
         //ignore domains in the same forest that we already searched, or outbound trusts
-        if (searchedDomains.Contains(trust.TargetName) || trust.TrustDirection == TrustDirection.Outbound) continue;
+        if (searchedDomains.Contains(trust.TargetName)
+            || trust.TrustDirection == TrustDirection.Outbound) continue;
         var domain = new DirectoryEntry($"LDAP://{trust.TargetName}");
         domain.RefreshCache(new [] {"distinguishedName"});
         var domainDn = (string) domain.Properties["distinguishedName"].Value;
@@ -219,4 +220,4 @@ private static IEnumerable<string> GetUsersGroupsAllDomains(DirectoryEntry de) {
 }
 ```
 
-The code that looks for the domains (like `Domain.GetDomain`, `d.Forest.Domains`, and `d.GetAllTrustRelationships()`) make calls out to AD to find that information. To gain performance, you can either hard-code the domain names in (if your code will only be run in one AD environment) or cache them the first time you find them.
+The code that looks for the domains (like `Domain.GetDomain()`, `d.Forest.Domains`, and `d.GetAllTrustRelationships()`) make calls out to AD to find that information. To gain performance, you can either hard-code the domain names in (if your code will only be run in one AD environment) or cache them the first time you find them.
