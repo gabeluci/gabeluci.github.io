@@ -87,7 +87,7 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
 
 #### Finding foreign members
 
-If you need to account for Foreign Security Princiapls, they are a little tricky. FSP's contain the SID of the object on the external domain. You can bind directly to an object using the SID by using `LDAP://<SID={sid}>`, but for objects on an external domain, you also have to include the DNS name of the domain: `LDAP://domain.com/<SID={sid}>`. Because of that, **we need to know the DNS name of the domain** ahead of time.
+If you need to account for Foreign Security Principals, they are a little tricky. FSP's contain the SID of the object on the external domain. You can bind directly to an object using the SID by using `LDAP://<SID={sid}>`, but for objects on an external domain, you also have to include the DNS name of the domain: `LDAP://domain.com/<SID={sid}>`. Because of that, **we need to know the DNS name of the domain** ahead of time.
 
 The SID will actually tell you the domain because the first part of the SID is specific to the domain, whereas the very last section of numbers in the SID is specific to the object. So in this method, we first look up all the domain trusts and create a mapping table between each domain's SID and its DNS name.
 
