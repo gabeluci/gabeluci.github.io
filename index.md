@@ -14,7 +14,7 @@ title: Gabe's Code
 # {{category[0] | capitalize}}
 <ul>
   {% for post in sorted_posts %}
- 	<li><a href="{{ site.url }}{{ site.baseurl }}{{  post.url }}">{{  post.title }}</a></li>
+ 	<li><a href="{{ site.baseurl }}{{  post.url }}">{{  post.title }}</a></li>
   {% endfor %}
 </ul>
 {% endfor %}

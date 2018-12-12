@@ -51,6 +51,30 @@ That FSP is **named after the SID of the user** on the external domain. The `dis
 
 This can only be done with groups with a scope of Domain Local.
 
+## Beware of `memberOf`
+
+When checking group membership, you may be tempted to just use the `memberOf` attribute of the user. That's what it's for, right? It has all the groups the user is a member of...
+
+Well, maybe. Groups only get added to `memberOf` if they have a Group Scope of:
+
+1. **Universal** and are in the same AD forest as the user, or
+2. **Global** and are on the same domain.
+
+Groups _do not_ get added to `memberOf` if they have a Group Scope of **Global and are on another domain** (even if in the same forest).
+
+On top of that, `memberOf` will only include **Domain Local groups from the same domain of the server** you are retrieving results from. (if you are working in a multi-domain environment and reading from a Global Catalog, this may not be the same domain the user is from)
+
+It will also not report the user's **primary group** (usually `Domain Users`), if that's important to you, nor will it include **groups on external trusted domains**.
+
+Does this mean you can *never* rely on `memberOf`? No. It's perfectly appropriate if:
+
+1. You're working in a **single-domain** environment, or
+2. You're working in a **single-forest** environment and you are sure you only care about Universal groups (such as distribution lists)
+
+If `memberOf` is good enough for you, then use it! It will be the quickest way.
+
+The next important question is:
+
 ## Why do I care?
 
 This knowledge is valuable **for performance** in your code. If you can make assumptions about the groups and users you are working with, then you may be able to ignore Primary Groups or Foreign Security Principals, and thus save time.

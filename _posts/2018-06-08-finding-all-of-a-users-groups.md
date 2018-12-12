@@ -13,31 +13,7 @@ It's first important to understand how a user even becomes a member of a group -
 
 > [What makes a member a member?]({% post_url 2018-06-07-what-makes-a-member %})
 
-## Beware of `memberOf`
-
-You may be tempted to just use the `memberOf` attribute of the user. That's what it's for, right? It has all the groups the user is a member of...
-
-Well, maybe. Groups only get added to `memberOf` if they have a Group Scope of:
-
-1. **Universal** and are in the same AD forest as the user, or
-2. **Global** and are on the same domain.
-
-Groups _do not_ get added to `memberOf` if they have a Group Scope of **Global and are on another domain** (even if in the same forest).
-
-On top of that, `memberOf` will only include **Domain Local groups from the same domain of the server** you are retrieving results from.
-
-It will also not report the user's **primary group** (usually `Domain Users`), if that's important to you, nor will it include **groups on external trusted domains**.
-
-Does this mean you can *never* rely on `memberOf`? No. It's perfectly appropriate if:
-
-1. You're working in a **single-domain** environment, or
-2. You're working in a **single-forest** environment and you are sure you only care about Universal groups (such as distribution lists)
-
-If `memberOf` is good enough for you, then use it! It will be the quickest way.
-
-The next important question is:
-
-## Why?
+## Why am I doing this?
 
 The reason why you want to know all of the user's groups may change your approach. For example, if you need to know for the purposes of **granting permissions**, then you need to gather the groups recursively. That is, if a permission is granted to `GroupA`, and `GroupB` is a member of `GroupA`, and a user is a member of `GroupB`, then that user should be granted the permissions granted to `GroupA`.
 
@@ -49,7 +25,7 @@ A recursive search for every group is time consuming. If you already know the na
 
 ### `System.DirectoryServices.AccountManagement`
 
-The `AccountManagement` namespace makes this easy for us. Let's say we already have a `UserPrincipal` object called `user` for the user object in question. If we want to get just the user's immediate groups, we can do this:
+The `AccountManagement` namespace makes this easy for us. When you're using Windows Authentication, or just running a desktop app in Windows, you will have access to a `UserPrincipal` object of the current user. So let's say we already have a `UserPrincipal` object called `user` for the user in question. If we want to get just the user's immediate groups, we can do this:
 
 ```c#
 using (var groups = user.GetGroups()) {
@@ -57,7 +33,7 @@ using (var groups = user.GetGroups()) {
 }
 ```
 
-The [`GetGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.principal.getgroups) method uses the `memberOf` attribute, so **it has the limitations stated above**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
+The [`GetGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.principal.getgroups) method uses the `memberOf` attribute, so **it has the limitations stated in [my other article]({% post_url 2018-09-13-one-user-is-member-of-a-group %})**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
 
 There is also a separate method for authorization groups:
 
