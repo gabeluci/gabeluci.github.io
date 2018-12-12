@@ -45,7 +45,7 @@ These examples will output the accounts in `DOMAIN\username` format, but you can
 
 First, here is an example if you are working only in a **single-forest** environment (where you won't have any Foreign Security Principals).
 
-If you want to expand groups that are inside this group, pass `true` for the `recursive` parameter. These examples both assume you already have a `DirectoryEntry` object for the group.
+If you want to expand groups that are inside this group, pass `true` for the `recursive` parameter. These examples assume you already have a `DirectoryEntry` object for the group.
 
 ```c#
 public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool recursive = false) {
@@ -55,8 +55,8 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
 
     while (true) {
         var memberDns = group.Properties["member"];
-        foreach (var member in memberDns) {
-            using (var memberDe = new DirectoryEntry($"LDAP://{member.Replace("/", "\/")}")) {
+        foreach (string member in memberDns) {
+            using (var memberDe = new DirectoryEntry($"LDAP://{member.Replace("/", "\\/")}")) {
                 memberDe.RefreshCache(new[] { "objectClass", "msDS-PrincipalName", "cn" });
 
                 if (recursive && memberDe.Properties["objectClass"].Contains("group")) {
@@ -87,7 +87,7 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
 
 #### Finding foreign members
 
-If you need to account for Foreign Security Princiapls, they are a little tricky. FSP's contain the SID of the object on the external domain. You can bind directly to an object using the SID by using `LDAP://<SID={sid}>`, but you also have to include the domain: `LDAP://domain.com/<SID={sid}>`. Because of that, we need to know the DNS name of the domain.
+If you need to account for Foreign Security Princiapls, they are a little tricky. FSP's contain the SID of the object on the external domain. You can bind directly to an object using the SID by using `LDAP://<SID={sid}>`, but for objects on an external domain, you also have to include the DNS name of the domain: `LDAP://domain.com/<SID={sid}>`. Because of that, **we need to know the DNS name of the domain** ahead of time.
 
 The SID will actually tell you the domain because the first part of the SID is specific to the domain, whereas the very last section of numbers in the SID is specific to the object. So in this method, we first look up all the domain trusts and create a mapping table between each domain's SID and its DNS name.
 
@@ -116,8 +116,8 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
                 } catch (Exception e) {
                     //This can happen if you're running this with credentials
                     //that aren't trusted on the other domain or if the domain
-                   //can't be contacted
-                   Console.WriteLine($"Can't connect to domain {trust.TargetName}: {e.Message}");
+                    //can't be contacted
+                    throw new Exception($"Can't connect to domain {trust.TargetName}: {e.Message}", e);
                 }
             }
         }
@@ -125,8 +125,8 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
 
     while (true) {
         var memberDns = group.Properties["member"];
-        foreach (var member in memberDns) {
-            using (var memberDe = new DirectoryEntry($"LDAP://{member.Replace("/", "\/")}")) {
+        foreach (string member in memberDns) {
+            using (var memberDe = new DirectoryEntry($"LDAP://{member.Replace("/", "\\/")}")) {
                 memberDe.RefreshCache(new[] { "objectClass", "msDS-PrincipalName", "cn" });
 
                 if (recursive && memberDe.Properties["objectClass"].Contains("group")) {
