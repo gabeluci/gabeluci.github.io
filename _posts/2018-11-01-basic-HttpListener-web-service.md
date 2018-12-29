@@ -11,7 +11,7 @@ Sometimes you need to run tasks in the background, which is a job well-suited fo
 they're designed to stay running all the time. However, you will often want some kind of front-end
 to monitor what the service is doing. If your Windows service writes to a database, then you can use that:
 your front-end can just read from the database. But if not, you will want your front end to be able to
-communicate with your service.
+communicate with your service directly.
 
 You could build some kind of custom way of communicating, but web services are well-known and easy to work
 with from any front-end application. The .NET Framework does provide a class to create your own web server:
@@ -19,14 +19,14 @@ with from any front-end application. The .NET Framework does provide a class to 
 It's handy, but you do have to **construct every HTTP response from scratch**, which is different than writing
 something in ASP.NET, for example.
 
-In this example, I'll show you how to use that to create a simple web service in any application (like a Windows service) so other applications (like a website) can communicated with it.
+In this example, I'll show you how to use that to create a simple web service in any application (like a Windows service) so other applications can communicated with it.
 
 ## Caveat
 
 Note that this example **does not provide any authentication mechanism**. It listens on `localhost`, so
 if your front-end is running on the same server, then this should work just fine as long as the port 
 you use for this is not exposed to the internet. Otherwise, you will have to implement some kind of authentication.
-It should be easy enough to inspect the HTTP header for an api key, for example.
+It should be easy enough to inspect the HTTP header for an API key, for example.
 
 ## What does it do?
 
