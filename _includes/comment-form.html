@@ -20,7 +20,7 @@
         </label>
       </div>
       <input type="hidden" name="options[origin]" value="{{ page.url | absolute_url }}">
-      <input type="hidden" name="options[parent]" value="{{ page.url | absolute_url }}">
+      <input type="hidden" name="options[parent]" value="{{ page.slug }}">
       <input type="hidden" id="comment-replying-to" name="fields[replying_to]" value="">
       <input type="hidden" id="comment-post-id" name="options[slug]" value="{{ page.slug }}">
       <input type="hidden" name="options[reCaptcha][siteKey]" value="{{ site.reCaptcha.siteKey }}">
