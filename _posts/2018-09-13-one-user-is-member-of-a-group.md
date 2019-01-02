@@ -3,6 +3,7 @@ layout: default
 title: "Find out if one user is a member of a group"
 category: "Active Directory"
 permalink: /active-directory/:year/:month/:day/:title:output_ext
+comments: true
 ---
 
 # {{page.category}}: {{page.title}}

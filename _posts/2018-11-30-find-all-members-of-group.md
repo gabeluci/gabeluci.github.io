@@ -3,6 +3,7 @@ layout: default
 title: "Find all the members of a group"
 category: "Active Directory"
 permalink: /active-directory/:year/:month/:day/:title:output_ext
+comments: true
 ---
 
 # {{page.category}}: {{page.title}}

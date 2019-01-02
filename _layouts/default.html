@@ -6,6 +6,9 @@
     <title>{% if page.category %}{{page.category}}: {% endif %}{{page.title}} | {{site.title}}</title>
 {% seo %}
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{{ '/assets/js/lazysizes.min.js' | relative_url }}"></script>
+    <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
     <script src="{{ '/assets/js/scale.fix.js' | relative_url }}"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
@@ -55,6 +58,9 @@
 
       <section>
         {{ content }}
+        {% if page.comments == true %}
+          {% include comments.html %}
+        {% endif %}
       </section>
 
       <footer>

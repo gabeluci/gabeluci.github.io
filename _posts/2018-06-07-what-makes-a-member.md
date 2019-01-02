@@ -3,6 +3,7 @@ layout: default
 title: "What makes a member a member?"
 category: "Active Directory"
 permalink: /active-directory/:year/:month/:day/:title:output_ext
+comments: true
 ---
 
 # {{page.category}}: {{page.title}}

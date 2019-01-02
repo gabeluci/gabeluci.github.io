@@ -3,6 +3,7 @@ layout: default
 title: "Better Performance"
 category: "Active Directory"
 permalink: /active-directory/:year/:month/:day/:title:output_ext
+comments: true
 ---
 
 # {{page.category}}: {{page.title}}

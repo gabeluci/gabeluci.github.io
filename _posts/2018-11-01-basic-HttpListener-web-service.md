@@ -3,6 +3,7 @@ layout: default
 title: "Create a basic HttpListener web service"
 category: ".NET"
 permalink: /dotnet/:year/:month/:day/:title:output_ext
+comments: true
 ---
 
 # {{page.category}}: {{page.title}}
