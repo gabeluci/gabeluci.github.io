@@ -1,11 +1,11 @@
 // Static comments
-(function($) {
+$(function() {
     $("#comment-form").submit(function() {
       var form = this;
   
       $(form).addClass("disabled");
       $("#comment-form-submit").html(
-        '<svg class="icon spin"><use xlink:href="/assets/icons/icons.svg#icon-loading"></use></svg> Loading...'
+        'Sending...'
       );
   
       $.ajax({
@@ -21,7 +21,7 @@
             .removeClass("danger")
             .addClass("success");
           showAlert(
-            '<strong>Thanks for your comment!</strong> It is <a href="https://github.com/mmistakes/made-mistakes-jekyll/pulls">currently pending</a> and will show on the site once approved.'
+            '<strong>Thanks for your comment!</strong><br>It is <a href="https://github.com/gabeluci/gabeluci.github.io/pulls">currently pending</a> and will show on the site once approved.'
           );
         },
         error: function(err) {
@@ -31,7 +31,7 @@
             .removeClass("success")
             .addClass("danger");
           showAlert(
-            "<strong>Sorry, there was an error with your submission.</strong> Please make sure all required fields have been completed and try again."
+            "<strong>Sorry, there was an error with your submission.</strong><br>Please make sure all required fields have been completed and try again."
           );
           $(form).removeClass("disabled");
         }
@@ -44,7 +44,7 @@
       $("#comment-form .js-notice").removeClass("hidden");
       $("#comment-form .js-notice-text").html(message);
     }
-  })(jQuery);
+  });
   
   // Staticman comment replies
   // modified from Wordpress https://core.svn.wordpress.org/trunk/wp-includes/js/comment-reply.js
