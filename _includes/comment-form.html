@@ -25,7 +25,7 @@
       <input type="hidden" id="comment-post-id" name="options[slug]" value="{{ page.slug }}">
       <input type="hidden" name="options[reCaptcha][siteKey]" value="{{ site.reCaptcha.siteKey }}">
       <input type="hidden" name="options[reCaptcha][secret]" value="{{ site.reCaptcha.secret }}">
-      <input name="options[redirect]" type="hidden" value="https://gabescode.com/{{ page.url }}">      <!-- Start comment form alert messaging -->
+      <input name="options[redirect]" type="hidden" value="https://gabescode.com{{ page.url }}">      <!-- Start comment form alert messaging -->
       <div class="hidden js-notice notice">
         <p class="js-notice-text"></p>
       </div>
