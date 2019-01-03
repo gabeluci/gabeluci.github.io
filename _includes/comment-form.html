@@ -14,6 +14,12 @@
           <input type="url" id="comment-form-url" name="fields[url]" placeholder="https://domain.com">
         </label>
       </div>
+      <div class="notice">
+          Your email address is used to display your <a href="https://en.gravatar.com">Gravatar</a>, if applicable,
+          and subscribe you to replies using the <a href="https://www.mailgun.com">Mailgun</a> web service,
+          which you are free to unsubscribe from when you get any emails.
+          Your email address will not be displayed publicly or shared with anyone else.
+      </div>
       <div class="form__group">
         <label for="comment-form-message">Comment
           <textarea type="text" rows="6" id="comment-form-message" name="fields[message]" required spellcheck="true" placeholder="Your message"></textarea>
@@ -26,14 +32,12 @@
       <input type="hidden" name="options[reCaptcha][siteKey]" value="{{ site.reCaptcha.siteKey }}">
       <input type="hidden" name="options[reCaptcha][secret]" value="{{ site.reCaptcha.secret }}">
       <input type="hidden" name="options[subscribe]" value="email">
-      <!-- Start comment form alert messaging -->
-      <div class="hidden js-notice notice">
-        <p class="js-notice-text"></p>
-      </div>
-      <!-- End comment form alert messaging -->
       <div class="g-recaptcha form__group" data-sitekey="{{ site.reCaptcha.siteKey }}"></div>
       <button type="submit" id="comment-form-submit">Send comment</button>
     </form>
+    <div class="hidden js-notice notice">
+      <p class="js-notice-text"></p>
+    </div>
   </div>
   <!-- End comment form -->
   <script async src="https://www.google.com/recaptcha/api.js"></script>
