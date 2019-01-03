@@ -1,4 +1,4 @@
-<article id="comment{% unless include.r %}{{ index | prepend: '-' }}{% else %}{{ include.index | prepend: '-' }}{% endunless %}" class="js-comment comment {% unless include.replying_to == 0 %}child{% endunless %}">
+<article id="comment{% unless include.r %}{{ id | prepend: '-' }}{% else %}{{ include.id | prepend: '-' }}{% endunless %}" class="js-comment comment {% unless include.parent == include.id %}child{% endunless %}">
   <div class="comment__avatar">
     {% if include.avatar %}
       <noscript><img src="{{ include.avatar }}" alt=""></noscript>
@@ -20,17 +20,17 @@
       {% endunless %}
       {% if include.date %}
         on
-        {% if include.index %}<a href="#comment{% if r %}{{ index | prepend: '-' }}{% else %}{{ include.index | prepend: '-' }}{% endif %}" title="Permalink to this comment">{% endif %}
+        {% if include.id %}<a href="#comment{% if r %}{{ id | prepend: '-' }}{% else %}{{ include.id | prepend: '-' }}{% endif %}" title="Permalink to this comment">{% endif %}
           <time datetime="{{ include.date | date_to_xmlschema }}">{{ include.date | date_to_long_string }}</time>
-        {% if include.index %}</a>{% endif %}
+        {% if include.id %}</a>{% endif %}
       {% endif %}
     </header>
     <div class="comment__message">
       {{ include.message | markdownify }}
     </div>
-    {% unless include.replying_to != 0 or page.comments_locked == true %}
+    {% unless include.parent != include.id or page.comments_locked == true %}
       <div class="comment__reply">
-        <a rel="nofollow" href="#comment-{{ include.index }}" onclick="return addComment.moveForm('comment-{{ include.index }}', '{{ include.index }}', 'respond', '{{ page.slug }}')">
+        <a rel="nofollow" href="#comment-{{ include.id }}" onclick="return addComment.moveForm('comment-{{ include.id }}', '{{ include.id }}', 'respond', '{{ include.id }}')">
           &#x2BA9; Reply to {{ include.name }}</a>
       </div>
     {% endunless %}
