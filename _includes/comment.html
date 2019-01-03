@@ -37,16 +37,18 @@
   </div>
 </article>
 
-{% capture i %}{{ include.id }}{% endcapture %}
-{% assign replies = site.data.comments[page.slug] | sort | where_exp: 'comment', 'comment[1].parent == i' %}
-{% for reply in replies %}
-  {% assign id          = reply[1]._id %}
-  {% assign parent      = reply[1]._parent %}
-  {% assign avatar      = reply[1].avatar %}
-  {% assign email       = reply[1].email %}
-  {% assign name        = reply[1].name %}
-  {% assign url         = reply[1].url %}
-  {% assign date        = reply[1].date %}
-  {% assign message     = reply[1].message %}
-  {% include comment.html id=id parent=parent avatar=avatar email=email name=name url=url date=date message=message %}
-{% endfor %}
+{% if include.parent == include.id %}
+  {% capture i %}{{ include.id }}{% endcapture %}
+  {% assign replies = site.data.comments[page.slug] | sort | where_exp: 'comment', 'comment[1]._id != i' | where_exp: 'comment', 'comment[1]._parent == i' %}
+  {% for reply in replies %}
+    {% assign id          = reply[1]._id %}
+    {% assign parent      = reply[1]._parent %}
+    {% assign avatar      = reply[1].avatar %}
+    {% assign email       = reply[1].email %}
+    {% assign name        = reply[1].name %}
+    {% assign url         = reply[1].url %}
+    {% assign date        = reply[1].date %}
+    {% assign message     = reply[1].message %}
+    {% include comment.html id=id parent=parent avatar=avatar email=email name=name url=url date=date message=message %}
+  {% endfor %}
+{% endunless %}
