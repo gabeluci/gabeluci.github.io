@@ -37,16 +37,16 @@
   </div>
 </article>
 
-{% capture i %}{{ include.index }}{% endcapture %}
-{% assign replies = site.data.comments[page.slug] | sort | where_exp: 'comment', 'comment[1].replying_to == i' %}
+{% capture i %}{{ include.id }}{% endcapture %}
+{% assign replies = site.data.comments[page.slug] | sort | where_exp: 'comment', 'comment[1].parent == i' %}
 {% for reply in replies %}
-  {% assign index       = forloop.index | prepend: '-' | prepend: include.index %}
-  {% assign replying_to = reply[1].replying_to | to_integer %}
+  {% assign id          = reply[1]._id %}
+  {% assign parent      = reply[1]._parent %}
   {% assign avatar      = reply[1].avatar %}
   {% assign email       = reply[1].email %}
   {% assign name        = reply[1].name %}
   {% assign url         = reply[1].url %}
   {% assign date        = reply[1].date %}
   {% assign message     = reply[1].message %}
-  {% include comment.html index=index replying_to=replying_to avatar=avatar email=email name=name url=url date=date message=message %}
+  {% include comment.html id=id parent=parent avatar=avatar email=email name=name url=url date=date message=message %}
 {% endfor %}
