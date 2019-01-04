@@ -69,6 +69,7 @@ The site key needs to be read in your Jekyll code (unless you just want to hardc
 ```
 reCaptcha:
   siteKey: "key"
+  secret: "encrypted secret"
 ```
 
 ## Show Comments on the Posts
