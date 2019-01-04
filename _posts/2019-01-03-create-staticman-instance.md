@@ -18,12 +18,6 @@ I wanted to create a commenting system for this site, but if I was going to do i
 
 After doing some research, I decided on [Staticman](https://staticman.net/), which works perfectly with GitHub Pages. It works through the GitHub API to commit new comments to your GitHub repository, which of course triggers a rebuild of your page and the new comment will be included in your page. If you prefer to moderate your comments, you can make it send pull requests that you have to approve. Although even if you don't moderate comments, each comment is stored as a separate file, so you can delete comments by just deleting that file.
 
-There are several walk-throughs online about how to set this up, but the ones I found most useful were from [mademistakes.com](https://mademistakes.com), mostly because he tackled the issue of threading comments, which I ended up expanding on:
-
-> [Going static part 2: static comments](https://mademistakes.com/articles/jekyll-static-comments/)
-
-> [Improving static comments with Jekyll & Staticman](https://mademistakes.com/articles/improving-jekyll-static-comments/)
-
 But nothing is easy, so obviously I had a ton of trouble setting this up:
 
 1. Staticman has a public API that anyone is free to use. However, [it's in trouble](https://github.com/eduardoboucas/staticman/issues/222): so many people are using it that it has started to hit the maximum usage that the GitHub API allows. So I decided to create my own instance of Staticman.
@@ -36,7 +30,7 @@ So let me describe my adventure. Feel free to skip the sections that aren't rele
 
 Staticman is written in [NodeJS](https://nodejs.org), so I had to install it on my server. The VPS I already have ($15/year from [ChicagoVPS](https://www.chicagovps.net/services/cloud-vps)) has only 128MB of RAM and runs Ubuntu Trusty. Not a whole lot of power, and an old version of Ubuntu, but it has served me well for the [tiny websites](https://convertgasprices.com) I have running on there.
 
-I found out the hard way that the version of NodeJS in the Ubuntu Trusty repository is a really old version that didn't work at all with Staticman. Instead, I needed to add a repository to apt before installing NodeJS.
+I found out the hard way that the version of NodeJS in the Ubuntu Trusty repository is a *really* old version that didn't work at all with Staticman. Instead, I needed to add a repository to apt before installing NodeJS.
 
 The process is described [here](https://github.com/nodesource/distributions/blob/master/README.md#debinstall). The instructions they give downloads and runs a script that attempts to add the correct repository for the version of NodeJS you want and the version of Ubuntu you're running. But the error messages are sort of lacking, so it took me a while to figure out that there is no package for NodeJS 11.x for Trusty. So I had to install version 10.
 
