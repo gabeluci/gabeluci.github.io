@@ -2,7 +2,7 @@
 layout: default
 title: "Setting up my own instance"
 category: "Staticman"
-permalink: /active-directory/:year/:month/:day/:title:output_ext
+permalink: /staticman/:year/:month/:day/:title:output_ext
 comments: true
 ---
 

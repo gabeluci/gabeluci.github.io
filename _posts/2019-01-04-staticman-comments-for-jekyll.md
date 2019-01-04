@@ -2,7 +2,7 @@
 layout: default
 title: "Adding comments to my Jekyll site"
 category: "Staticman"
-permalink: /active-directory/:year/:month/:day/:title:output_ext
+permalink: /staticman/:year/:month/:day/:title:output_ext
 comments: true
 ---
 
