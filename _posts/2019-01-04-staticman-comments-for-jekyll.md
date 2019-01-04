@@ -176,7 +176,7 @@ Staticman does send out an email right away (even when a top-level comment is ma
 
 When I tested the notifications, the `From` line in GMail showed up like this:
 
-> Staticman noreply@staticman.net via mg.gabescode.com 
+> **Staticman** noreply@staticman.net via mg.gabescode.com
 
 I didn't like that. There are two things I wanted to change:
 
@@ -187,17 +187,21 @@ Both have to be changed on the Staticman server. The `From` address can be chang
 
 ```
 "email": {
-    "fromAddress": "noreply@mg.gabescode.com"
+  "fromAddress": "noreply@mg.gabescode.com"
 }
 ```
 
 That got rid of the whole "via" thing.
 
-There is no configuration option for the display name, so I had to dig into the code again for that. I opened up [`/lib/Notification.js`](https://github.com/eduardoboucas/staticman/blob/master/lib/Notification.js#L32) and changed it to "Gabe's Code":
+There is no configuration option for the display name, so I had to dig into the Staticman code again for that. I opened up [`/lib/Notification.js`](https://github.com/eduardoboucas/staticman/blob/master/lib/Notification.js#L32) and changed it to "Gabe's Code":
 
 ```js
 from: `Gabe\'s Code <${config.get('email.fromAddress')}>`,
 ```
+
+Now it looks like this:
+
+> **Gabe's Code** noreply@mg.gabescode.com 
 
 ## Webhook!
 
