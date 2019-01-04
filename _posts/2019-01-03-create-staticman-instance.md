@@ -8,21 +8,12 @@ comments: true
 
 # {{page.category}}: {{page.title}}
 
-I wanted to create a commenting system for this site, but if I was going to do it, I was going to do it right. I had a few requirements:
+I decided to use Staticman for comments on this site for reasons I described in [my other article]({% post_url 2019-01-04-staticman-comments-for-jekyll %}). Staticman has a public API that anyone is free to use. However, [it's in trouble](https://github.com/eduardoboucas/staticman/issues/222): so many people are using it that it has started to hit the maximum usage that the GitHub API allows. So I decided to create my own instance of Staticman.
 
-1. **Comments should be embedded** into the HTML of the page, not loaded by JavaScript. This is mostly for the sake of SEO: the comments can be indexed with the page.
-2. **Allow threads**, so it's clear that one person is replying to another.
-3. **Notify people** that someone replied to their comment.
-4. [GitHub Pages](https://pages.github.com/) (where this site is hosted) does not allow any Jekyll plugins (at least not if you want to let GitHub build the site), so **I didn't want any plugins**.
-5. **Moderate comments**: no matter how much "I am not a robot" logic you put on your page, there will still be people (likely manually) posting useless comments for the sole purpose of injecting a link to their website.
+Of course, nothing is easy, so I had a ton of trouble setting it up. A couple issues I faced were:
 
-After doing some research, I decided on [Staticman](https://staticman.net/), which works perfectly with GitHub Pages. It works through the GitHub API to commit new comments to your GitHub repository, which of course triggers a rebuild of your page and the new comment will be included in your page. If you prefer to moderate your comments, you can make it send pull requests that you have to approve. Although even if you don't moderate comments, each comment is stored as a separate file, so you can delete comments by just deleting that file.
-
-But nothing is easy, so obviously I had a ton of trouble setting this up:
-
-1. Staticman has a public API that anyone is free to use. However, [it's in trouble](https://github.com/eduardoboucas/staticman/issues/222): so many people are using it that it has started to hit the maximum usage that the GitHub API allows. So I decided to create my own instance of Staticman.
-2. The VPS that I already have doesn't have much RAM. So little in fact that I couldn't run `npm install`.
-3. A few settings that documentation glossed over, which I couldn't figure out how to populate properly.
+- The VPS that I already have doesn’t have much RAM. So little in fact that I couldn’t run `npm install`.
+- A few settings that documentation glossed over, which I couldn’t figure out how to populate properly.
 
 So let me describe my adventure. Feel free to skip the sections that aren't relevant to you.
 
@@ -129,7 +120,7 @@ The `port` you choose is up to you. I already had Apache running on my server, s
 
 At this point you should be able to run `npm start` and it should work! If so, hit Ctrl+C. There's more work to do.
 
-Since I will be using Apache as a proxy, I want to prevent the outside world from *directly* accessing Staticman on port 8080, I edited line 154 in `server.js` so that it would only listen on the local loopback IP (127.0.0.1). This ensures that *only* Apache can access it:
+Since I will be using Apache as a proxy, I want to prevent the outside world from *directly* accessing Staticman on port 8080, I edited [line 154 in `server.js`](https://github.com/eduardoboucas/staticman/blob/master/server.js#L154) so that it would only listen on the local loopback IP (127.0.0.1). This ensures that *only* Apache can access it:
 
 ```js
 this.server.listen(config.get('port'),'127.0.0.1', callbackFn)
@@ -243,5 +234,19 @@ Looks good!
 ## Debugging
 
 If you run into problems at any point, stop the service (`service staticman stop`) and just run `npm start` from the console. Then if any errors happen, you'll see them on the console. This will be handy for debugging any errors later when you start using it.
+
+## Keep Other People Out
+
+Staticman is designed to be a public API. As such, once you setup a Staticman instance, *anyone* can use it, if they know about it. If you're ok with that, cool! But as discussed, my VPS is strapped for resources, and I just gave you all the information you need to know to use my instance :) so I decided to lock it down. I did that by adding this line to the Apache config files for both sites (HTTP and HTTPS):
+
+```apacheconf
+ProxyPass /v2/connect !
+```
+
+That should go before the other `ProxyPass` directives.
+
+A crucial step in setting up Staticman for your site is to make a request to `/v2/connect/GITHUB-USERNAME/GITHUB-REPOSITORY`, which tells Staticman to accept the invitation to become a collaborator in your GitHub repository. Adding this `ProxyPass` directive ensures these requests never actually make it to Staticman.
+
+Just **make sure you do this *after* you have completely setup your comments**, since you will need to use this in your own setup.
 
 In a follow-up article, I'll show how I set up this site to use my new instance of Staticman.
