@@ -13,7 +13,7 @@ I decided to use Staticman for comments on this site for reasons I described in 
 Of course, nothing is easy, so I had a ton of trouble setting it up. A couple issues I faced were:
 
 - The VPS that I already have doesn’t have much RAM. So little in fact that I couldn’t run `npm install`.
-- A few settings that documentation glossed over, which I couldn’t figure out how to populate properly.
+- A few settings that documentation glossed over, which I couldn’t figure out how to populate properly at first.
 
 So let me describe my adventure. Feel free to skip the sections that aren't relevant to you.
 
@@ -126,6 +126,8 @@ Since I will be using Apache as a proxy, I want to prevent the outside world fro
 this.server.listen(config.get('port'),'127.0.0.1', callbackFn)
 ```
 
+> I did end up changing some other code in Staticman, which I described in [my other article]({% post_url 2019-01-04-staticman-comments-for-jekyll %}).
+
 ## Make Staticman a Service
 
 We want Staticman to start when the server starts and restart if it fails for whatever reason - just stay running! If you search, you will find various ways of doing this, like [installing an NPM module called PM2](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-18-04), or [using systemctl](https://hackernoon.com/making-node-js-service-always-alive-on-ubuntu-server-e20c9c0808e4), but both of those required me to install something. I already knew I could run services (like Apache) with `service apache2 start`, so I wanted to set this up the same way.
@@ -237,7 +239,7 @@ If you run into problems at any point, stop the service (`service staticman stop
 
 ## Keep Other People Out
 
-Staticman is designed to be a public API. As such, once you setup a Staticman instance, *anyone* can use it, if they know about it. If you're ok with that, cool! But as discussed, my VPS is strapped for resources, and I just gave you all the information you need to know to use my instance :) so I decided to lock it down. I did that by adding this line to the Apache config files for both sites (HTTP and HTTPS):
+Staticman is designed to be a public API. As such, once you setup a Staticman instance, *anyone* can use it for their own website, if they know about it. If you're ok with that, cool! But as discussed, my VPS is strapped for resources, and I just gave you all the information you need to know to use my instance :) so I decided to lock it down. I did that by adding this line to the Apache config files for both sites (HTTP and HTTPS):
 
 ```apacheconf
 ProxyPass /v2/connect !
@@ -249,4 +251,4 @@ A crucial step in setting up Staticman for your site is to make a request to `/v
 
 Just **make sure you do this *after* you have completely setup your comments**, since you will need to use this in your own setup.
 
-In a follow-up article, I'll show how I set up this site to use my new instance of Staticman.
+In [my other article]({% post_url 2019-01-04-staticman-comments-for-jekyll %}), I show how I set up this site to use my new instance of Staticman.

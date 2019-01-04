@@ -26,7 +26,7 @@ There are several walk-throughs online about how to set this up, but the ones I 
 
 Because the public Staticman API [is in trouble](https://github.com/eduardoboucas/staticman/issues/222), I decided to [host my own Staticman instance]({% post_url 2019-01-03-create-staticman-instance %}). Read that article if you're curious about how I did it.
 
-This article will cover inplementing the comments into the actual Jekyll pages. However, be aware that there are a few things I did that depends on running my own instance, since I changed the Staticman code to make it happen.
+This article will cover inplementing the comments into the actual Jekyll pages. However, be aware that there are a few things I did that depend on running my own instance, since I changed the Staticman code to make it happen.
 
 Feel free to skip the sections you don't care about, but:
 
