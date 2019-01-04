@@ -199,6 +199,15 @@ There is no configuration option for the display name, so I had to dig into the 
 from: `Gabe\'s Code <${config.get('email.fromAddress')}>`,
 ```
 
+## Webhook!
+
+This is a **crucial step if you have moderation enabled**: You need to setup a webhook in your GitHub repository to notify Staticman when the pull request has been merged. The instructions are [here](https://staticman.net/docs/webhooks) and quite straight-forward.
+
+Staticman does two things when that webhook is triggered:
+
+1. **Deletes the branch** that was created for the pull request, and
+2. **Sends the email** notifications (i.e. no email notifications will go out if you have moderation enabled and have not setup your webhook)
+
 ## Conclusion
 
 I hope this helps someone. It was a somewhat frustrating experience for me to set this up, but in the end, I'm happy with the way it turned out.
