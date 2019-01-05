@@ -51,4 +51,4 @@
     {% assign message     = reply[1].message %}
     {% include comment.html id=id parent=parent avatar=avatar email=email name=name url=url date=date message=message %}
   {% endfor %}
-{% endunless %}
+{% endif %}

@@ -107,7 +107,7 @@ The example from [mademistakes.com](https://mademistakes.com/) implemented threa
 
 He had used a `replying_to` field that holds the index of the original comment in the array of comments. So if you replied to the first comment on that post, then `replying_to` would be `1`. If you replied to the 5th comment, it would be `5`. That works, but if you decide to delete a comment (which is easy because each comment is its own file in `_data/comments`), it would break the threading since the indexes would change (the 5th comment could become the 4th, but `replying_to` would still be `5`).
 
-I changed it so that, when you reply, the `_parent` field (`options[parent]` in the form) is set to the `_id` of the original comment. The `_id` field is a GUID that is automatically generated in Staticman for each new comment.
+I changed it so that, when you reply, the `_parent` field (`options[parent]` in the form) is set to the `_id` of the comment you're replying to. The `_id` field is a GUID that is automatically generated in Staticman for each new comment.
 
 I got rid of the `replying_to` field entirely. I had to update his JavaScript to accomodate this.
 
@@ -142,7 +142,7 @@ For a person to be subscribed to notifications, you have to send a field named `
 <input type="hidden" name="options[subscribe]" value="email">
 ```
 
-The email has an unsubscribe button, so they can use that if they decide later they don't want notifications.
+The email has an unsubscribe link, so they can use that if they decide later they don't want notifications.
 
 ### Per-Thread Notifications
 
