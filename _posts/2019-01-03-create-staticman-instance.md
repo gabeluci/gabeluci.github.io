@@ -104,15 +104,18 @@ The Staticman documentation simply says,
 
 GitHub's documentation for [creating an access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/) is pretty good, so do that and copy the new access token into the `githubToken` property in the config file.
 
-The documentation for [generating a new SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#platform-linux) and [adding a new SSH key to your GitHub account](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/#platform-linux) is pretty good too, so follow that. The only caveat is that it instructs you to install xclip, but that only applies if your main workstation is Linux. If your Linux server is remote, then you don't need to. Just copy the SSH key from the console window and paste it into the GitHub website. Just remember that you should be logged into GitHub with your new bot account for all that.
+The documentation for [generating a new SSH key](https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#platform-linux) and [adding a new SSH key to your GitHub account](https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/#platform-linux) is pretty good too, so follow that. But there are two caveats:
 
-At this point, your new SSH key should be associated with your GitHub bot ccount. Adding the SSH key to your config file *is not* straight-forward. At first, I tried to take the contents of my key file (`~/.ssh/id_rsa`), replace the newlines with `\n` and put that into the `rsaPrivateKey` property in the config file. But when I ran `npm start`, I kept getting this error:
+1. It instructs you to accept the default location for the new key: `./.ssh/id_rsa`. That location is for the default key used for whichever account you are logged in with. You may already have a key there, or you wish to create it in another location so that it isn't used when you don't want it to be.
+2. It instructs you to install xclip, but that only applies if your main workstation is Linux. If your Linux server is remote, then you don't need to. Just copy the SSH key from the console window and paste it into the GitHub website. Just remember that you should be logged into GitHub with your new bot account for all that.
+
+At this point, your new SSH key should be associated with your GitHub bot ccount. Adding the SSH key to your config file *is not* straight-forward. At first, I tried to take the contents of my key file, replace the newlines with `\n` and put that into the `rsaPrivateKey` property in the config file. But when I ran `npm start`, I kept getting this error:
 
     Error: Key format must be specified
 
 This, again, took me a long time to figure out, but Staticman (or more-specifically, the [node-rsa](https://github.com/rzcoder/node-rsa) module) expects the key to be in [PEM format](https://en.wikipedia.org/wiki/Privacy-Enhanced_Mail). But the instructions that GitHub gives you does not create it in PEM format. So you need to convert it. I did that like this:
 
-    openssl rsa -outform PEM -in ~/.ssh/id_rsa -out id_rsa.pem
+    openssl rsa -outform PEM -in /path/to/rsa_key -out id_rsa.pem
 
 When asked, give it the password that you used to create the key. At this point, you will have a file called `id_rsa.pem`. Take the contents of that and remove all line breaks (or replace them with `\n` - it doesn't really matter which) and paste that into the `rsaPrivateKey` property of your config file.
 
