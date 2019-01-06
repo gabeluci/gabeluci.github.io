@@ -290,7 +290,13 @@ header {
 	border-bottom-right-radius: 4px;
 	padding: 34px 25px 22px 25px;
 	margin: 30px 25px 0 0;
-	-webkit-font-smoothing: antialiased;
+  -webkit-font-smoothing: antialiased;
+}
+
+#stackoverflowflair {
+  position:absolute;
+  top:105%;
+  margin-left:-15px;
 }
 
 p.header {
@@ -649,6 +655,11 @@ input,textarea {
     width:auto;
   }
 
+  #stackoverflowflair {
+    position: static;
+    margin: 0;
+  }
+
 	footer {
 		border-top: 1px solid #ccc;
 		margin:0 84px 0 50px;
@@ -681,7 +692,7 @@ input,textarea {
   }
 
   header {
-    padding:10px 20px 0;
+    padding:10px 20px;
 		margin-right: 0;
   }
 
