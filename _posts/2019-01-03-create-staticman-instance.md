@@ -47,12 +47,9 @@ Many NodeJS apps (including Staticman) rely on an environment variable called `N
 
 The Staticman project on GitHub does have some instructions on [Setting up the server](https://github.com/eduardoboucas/staticman#setting-up-the-server), and it makes it sound easy. It wasn't so easy for me.
 
-I knew I wanted the code in `/var/www/staticman`, so I created that:
+I knew I wanted the code in `/var/www/staticman`, so I change directories to `/var/www` (the `staticman` directory will be created when we clone the repository):
 
-    mkdir /var/www/staticman
-    cd /var/www/staticman
-
-That worked. Exciting stuff!
+    cd /var/www
 
 The Staticman instructions say to run this:
 
