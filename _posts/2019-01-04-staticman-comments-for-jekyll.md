@@ -168,7 +168,7 @@ Staticman.prototype.processEntry = function (fields, options) {
 
 So now when a new top-level comment is made, `_parent` is set to the newly-generated `_id` and that is used to create the mailing list.
 
-> If you're using the public Staticman API, you could probably do something similar by generating your own GUID in JavaScript for top-level comments and put it in the parent, then use that in replies too. But then you would need another way to determine which was the top-level comment.
+> **If you're using the public Staticman API**, you could probably do something similar by generating your own unique identifier in JavaScript for top-level comments and put that in `_parent`, then use that in replies too. But then you would another field (called something like `isTopLevelComment`) that indicates what is a top-level a comment and what is not.
 
 Staticman does send out an email right away (even when a top-level comment is made). That's not always desirable, but if you have moderation turned on it does serve the purpose of notifying the person that their comment was approved, although it uses the same email template as a reply, so it says "Someone replied to a comment you subscribed to". I might decide to change that some time, but maybe not.
 
