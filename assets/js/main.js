@@ -22,7 +22,7 @@ $(function() {
             .addClass("success");
             $("#respond form").hide()[0].reset();
             showAlert(
-                '<strong>Thanks for your comment!</strong><br>It is <a href="https://github.com/gabeluci/gabeluci.github.io/pulls">currently pending</a> and will show on the site once approved.'
+                '<strong>Thanks for your comment!</strong><br>It is <a href="https://github.com/gabeluci/gabeluci.github.io/pulls">currently pending</a> and will show on the site once approved. You will be notified if your comment is approved.'
             );
         },
         error: function(err) {
