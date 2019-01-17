@@ -34,7 +34,10 @@ using (var groups = user.GetGroups()) {
 }
 ```
 
-The [`GetGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.principal.getgroups) method uses the `memberOf` attribute, so **it has the limitations stated in [my other article]({% post_url 2018-09-13-one-user-is-member-of-a-group %})**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
+The [`GetGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.principal.getgroups) method does have a couple limitations:
+
+1. It uses the `memberOf` attribute, so **it has the limitations stated in [my other article]({% post_url 2018-09-13-one-user-is-member-of-a-group %})**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
+2. If `GetGroups()` comes across any AD object with forward slashes (`/`) in either the name of the objet itself, or the name of the OU, it will throw an exception. This is a [a bug](https://github.com/dotnet/corefx/issues/29090).
 
 There is also a separate method for authorization groups:
 

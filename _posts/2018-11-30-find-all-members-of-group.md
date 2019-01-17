@@ -34,7 +34,6 @@ It's pretty short! But there are a few caveats:
 
 1. There is a lot more network traffic going on in behind than you actually need (it pulls in all attributes that have a value even though we're only using `SamAccountName`)
 2. It will crash if the group contains members from external trusted domains (i.e. Foreign Security Principals)
-3. If `GetGroups()` comes across any AD object with forward slashes (`/`) in either the name of the objet itself, or the name of the OU, there is [a bug](https://github.com/dotnet/corefx/issues/29090) that will make it throw an exception
 
 ### `System.DirectoryServices`
 
