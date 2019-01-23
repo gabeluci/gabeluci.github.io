@@ -77,14 +77,16 @@ private static bool IsUserInGroup(DirectoryEntry user, DirectoryEntry group, boo
             fspFilters.Append(
                 $"(member{recursiveFilter}=CN={userSid},CN=ForeignSecurityPrincipals{groupDomainDn})");
             
-            //Any of the groups the user is in could show up as an FSP,
-            //so we need to check for them all
-            user.RefreshCache(new [] {"tokenGroups"});
-            var tokenGroups = user.Properties["tokenGroups"];
-            foreach (byte[] token in tokenGroups) {
-                var groupSid = new SecurityIdentifier(token, 0);
-                fspFilters.Append(
-                    $"(member{recursiveFilter}=CN={groupSid},CN=ForeignSecurityPrincipals{groupDomainDn})");
+            if (recursive) {
+                //Any of the groups the user is in could show up as an FSP,
+                //so we need to check for them all
+                user.RefreshCache(new [] {"tokenGroupsGlobalAndUniversal"});
+                var tokenGroups = user.Properties["tokenGroupsGlobalAndUniversal"];
+                foreach (byte[] token in tokenGroups) {
+                    var groupSid = new SecurityIdentifier(token, 0);
+                    fspFilters.Append(
+                        $"(member{recursiveFilter}=CN={groupSid},CN=ForeignSecurityPrincipals{groupDomainDn})");
+                }
             }
             filter = $"(|{filter}{fspFilters})";
         }
@@ -113,6 +115,10 @@ Hence, we only need to test if *something* was returned.
 The `recursive` option works by using one of a few magic numbers called **Matching Rule OIDs**. This specific one (`1.2.840.113556.1.4.1941`) is called `LDAP_MATCHING_RULE_IN_CHAIN`. It can only be used on attributes that accept distinguished names (like `member`). It tells Active Directory to **follow the chain of groups** to find the user; for example, if the user is a member of a group that is a member of the group in question.
 
 More information can be found on Microsoft's article on their LDAP [Search Filter Syntax](https://docs.microsoft.com/en-us/windows/desktop/adsi/search-filter-syntax).
+
+There is a bit of magic in here for **Foreign Security Principals**; that is, if the user could be on an external trusted domain from the group. So it constructs the `distinguishedName` of the FSP that would be there if that were the case. For a recursive search, we use `tokenGroupsGlobalAndUniversal` to get a recursive list of all the user's groups from the user's domain and see if any of those are in the group in question.
+
+> The `tokenGroupsGlobalAndUniversal` attribute contains only Global and Universal groups. Domain Local groups cannot be used outside of the domain anyway, so we don't need to be concerned with those. The `tokenGroups` attribute is similar. It *does* include Domain Local groups, however it excludes Distribution groups, which is why I didn't use it here.
 
 ## Primary Group
 
