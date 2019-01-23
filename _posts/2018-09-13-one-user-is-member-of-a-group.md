@@ -55,17 +55,37 @@ private static bool IsUserInGroup(DirectoryEntry user, DirectoryEntry group, boo
     //This magic number tells AD to look for the user recursively through any nested groups
     var recursiveFilter = recursive ? ":1.2.840.113556.1.4.1941:" : "";
 
-    var filter = $"(member{recursiveFilter}={user.Properties["distinguishedName"].Value})";
+    var userDn = (string) user.Properties["distinguishedName"].Value;
     var groupDn = (string) group.Properties["distinguishedName"].Value;
+    
+    var filter = $"(member{recursiveFilter}={userDn})";
 
     if (((int) group.Properties["groupType"].Value & 8) == 0) {
-        //It's a Domain Local group, which means it can have users from external trusted
-        //domains, so the account might show up as a Foreign Security Principal
         var groupDomainDn = groupDn.Substring(
             groupDn.IndexOf(",DC=", StringComparison.Ordinal));
-        var sid = new SecurityIdentifier((byte[]) user.Properties["objectSid"].Value, 0);
-        filter =
-            $"(|{filter}(member{recursiveFilter}=CN={sid},CN=ForeignSecurityPrincipals{groupDomainDn}))";
+        var userDomainDn = userDn.Substring(
+            userDn.IndexOf(",DC=", StringComparison.Ordinal));
+        if (groupDomainDn != userDomainDn) {
+            //It's a Domain Local group, and the user and group are on
+            //different domains, so the account might show up as a Foreign //Security Principal. So construct a list of SID's that could
+            //appear in the group for this user
+            var fspFilters = new StringBuilder();
+            
+            var userSid = new SecurityIdentifier((byte[]) user.Properties["objectSid"].Value, 0);
+            fspFilters.Append(
+                $"(member{recursiveFilter}=CN={userSid},CN=ForeignSecurityPrincipals{groupDomainDn})");
+            
+            //Any of the groups the user is in could show up as an FSP,
+            //so we need to check for them all
+            user.RefreshCache(new [] {"tokenGroupsGlobalAndUniversal"});
+            var tokenGroups = user.Properties["tokenGroupsGlobalAndUniversal"];
+            foreach (byte[] token in tokenGroups) {
+                var groupSid = new SecurityIdentifier(token, 0);
+                fspFilters.Append(
+                    $"(member{recursiveFilter}=CN={groupSid},CN=ForeignSecurityPrincipals{groupDomainDn})");
+            }
+            filter = $"(|{filter}{fspFilters})";
+        }
     }
 
     var searcher = new DirectorySearcher {
