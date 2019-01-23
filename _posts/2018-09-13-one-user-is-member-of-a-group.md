@@ -67,11 +67,13 @@ private static bool IsUserInGroup(DirectoryEntry user, DirectoryEntry group, boo
             userDn.IndexOf(",DC=", StringComparison.Ordinal));
         if (groupDomainDn != userDomainDn) {
             //It's a Domain Local group, and the user and group are on
-            //different domains, so the account might show up as a Foreign //Security Principal. So construct a list of SID's that could
+            //different domains, so the account might show up as a Foreign
+            //Security Principal. So construct a list of SID's that could
             //appear in the group for this user
             var fspFilters = new StringBuilder();
             
-            var userSid = new SecurityIdentifier((byte[]) user.Properties["objectSid"].Value, 0);
+            var userSid =
+                new SecurityIdentifier((byte[]) user.Properties["objectSid"].Value, 0);
             fspFilters.Append(
                 $"(member{recursiveFilter}=CN={userSid},CN=ForeignSecurityPrincipals{groupDomainDn})");
             
