@@ -77,8 +77,8 @@ private static bool IsUserInGroup(DirectoryEntry user, DirectoryEntry group, boo
             
             //Any of the groups the user is in could show up as an FSP,
             //so we need to check for them all
-            user.RefreshCache(new [] {"tokenGroupsGlobalAndUniversal"});
-            var tokenGroups = user.Properties["tokenGroupsGlobalAndUniversal"];
+            user.RefreshCache(new [] {"tokenGroups"});
+            var tokenGroups = user.Properties["tokenGroups"];
             foreach (byte[] token in tokenGroups) {
                 var groupSid = new SecurityIdentifier(token, 0);
                 fspFilters.Append(
