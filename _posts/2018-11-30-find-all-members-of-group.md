@@ -137,9 +137,13 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
                     //The SID of the domain is the SID of the user minus the last block of numbers
                     var foreignDomainSid = foreignUserSid.Substring(0, foreignUserSid.LastIndexOf("-"));
                     if (domainSidMapping.TryGetValue(foreignDomainSid, out var foreignDomainDns)) {
-                        using (var foreignUser = new DirectoryEntry($"LDAP://{foreignDomainDns}/<SID={foreignUserSid}>")) {
-                            foreignUser.RefreshCache(new[] { "msDS-PrincipalName" });
-                            members.Add(foreignUser.Properties["msDS-PrincipalName"].Value.ToString());
+                        using (var foreignMember = new DirectoryEntry($"LDAP://{foreignDomainDns}/<SID={foreignUserSid}>")) {
+                            foreignMember.RefreshCache(new[] { "msDS-PrincipalName", "objectClass" });
+                            if (recursive && foreignMember.Properties["objectClass"].Contains("group")) {
+                                members.AddRange(GetGroupMemberList(foreignMember, true, domainSidMapping));
+                            } else {
+                                members.Add(foreignMember.Properties["msDS-PrincipalName"].Value.ToString());
+                            }
                         }
                     } else {
                         //unknown domain
