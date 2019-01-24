@@ -91,6 +91,8 @@ If you need to account for Foreign Security Principals, they are a little tricky
 
 The SID will actually tell you the domain because the first part of the SID is specific to the domain, whereas the very last section of numbers in the SID is specific to the object. So in this method, we first look up all the domain trusts and create a mapping table between each domain's SID and its DNS name.
 
+The code that looks for the domains (like `Domain.GetDomain()` and `domain.GetAllTrustRelationships()`) make calls out to AD to find that information. To gain performance, you can either hard-code the domain names in (if your code will only be run in one AD environment) or cache them the first time you find them.
+
 ```c#
 public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool recursive = false, Dictionary<string, string> domainSidMapping = null) {
     var members = new List<string>();
