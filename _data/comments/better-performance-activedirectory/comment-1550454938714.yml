@@ -8,7 +8,7 @@ message: >-
   membership and would like to say, that you're doing a great job. Keep going!
   One little thing I would like to share with you regarding performance is
   connection caching. See:
-  https://docs.microsoft.com/en-us/windows/desktop/adsi/connection-caching. In
+  [https://docs.microsoft.com/en-us/windows/desktop/adsi/connection-caching](https://docs.microsoft.com/en-us/windows/desktop/adsi/connection-caching). In
   terms of C# it means that we need to create and maintain a DirectoryEntry for
   every domain controller we connect to for all the time period we make LDAP
   queries to this DC. Singleton required here: every new created DirectoryEntry
