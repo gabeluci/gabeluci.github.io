@@ -1,0 +1,14 @@
+_id: 49740ba0-668b-11e9-99be-15a95dc93d94
+_parent: 937091c0-666c-11e9-99be-15a95dc93d94
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: >-
+  There is a simple example
+  [here](https://stackoverflow.com/a/45826072/1202807). Basically, you set the
+  OU as the
+  [`SearchRoot`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directorysearcher.searchroot)
+  and it will search only that OU and below. If you need more specific help, ask
+  a question on [StackOverflow](https://stackoverflow.com/). If you tag your
+  question with `active-directory`, I will probably see it.
+date: '2019-04-24T12:20:03.491Z'
