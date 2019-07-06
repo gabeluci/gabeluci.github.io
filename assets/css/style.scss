@@ -186,12 +186,8 @@ hr {
 /* Images */
 
 img {
-  position: relative;
-  margin: 0 auto;
   max-width: 650px;
-  padding: 5px;
-  margin: 10px 0 32px 0;
-  border: 1px solid #ccc;
+  vertical-align: middle;
 }
 
 p img, .emoji {
@@ -201,6 +197,19 @@ p img, .emoji {
   vertical-align: middle;
   text-align: center;
   border: none;
+}
+
+figure {
+  margin: 1.5em 0;
+  padding: 1.5em 0;
+  border-top: 1px dotted #0098d8;
+  border-bottom: 1px dotted #0098d8;
+  text-align: center;
+}
+
+figcaption {
+  text-align: center;
+  font-style: italic;
 }
 
 /* Code blocks */
