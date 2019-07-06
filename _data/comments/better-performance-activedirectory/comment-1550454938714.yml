@@ -1,0 +1,21 @@
+_id: 49b6fd50-3320-11e9-93e2-55aff897f43f
+_parent: 49b6fd50-3320-11e9-93e2-55aff897f43f
+name: oldovets
+email: 4d2cb3742252378efe06867ee127ec00
+url: ''
+message: >-
+  Hey, Gabriel. Just read your articles about Active Directory performance and
+  membership and would like to say, that you're doing a great job. Keep going!
+  One little thing I would like to share with you regarding performance is
+  connection caching. See:
+  [https://docs.microsoft.com/en-us/windows/desktop/adsi/connection-caching](https://docs.microsoft.com/en-us/windows/desktop/adsi/connection-caching). In
+  terms of C# it means that we need to create and maintain a DirectoryEntry for
+  every domain controller we connect to for all the time period we make LDAP
+  queries to this DC. Singleton required here: every new created DirectoryEntry
+  instance will reuse opened LDAP connection under the hood. This solves two
+  problems. 1. All LDAP request will (almost always) share one single
+  connection, and performance will go through the roof. 2. DoS. A domain
+  controller applies a throttling policy to LDAP requests. Creating numerous
+  LDAP connections from one computer (even if they are properly disposed) will
+  trigger the policy and at some point we will be unable to connect to the DC
+date: '2019-02-18T01:55:38.663Z'

@@ -16,7 +16,7 @@ It's first important to understand how a user even becomes a member of a group -
 
 ## Why am I doing this?
 
-The reason why you want to know all of the user's groups may change your approach. For example, if you need to know for the purposes of **granting permissions**, then you need to gather the groups recursively. That is, if a permission is granted to `GroupA`, and `GroupB` is a member of `GroupA`, and a user is a member of `GroupB`, then that user should be granted the permissions granted to `GroupA`.
+**The reason why** you want to know all of the user's groups **may change your approach**. For example, if you need to know for the purposes of **granting permissions**, then you need to gather the groups recursively. That is, if a permission is granted to `GroupA`, and `GroupB` is a member of `GroupA`, and a user is a member of `GroupB`, then that user should be granted the permissions granted to `GroupA`.
 
 A recursive search for every group is time consuming. If you already know the name of the group(s) you're looking for, then you are better off narrowing your search to just that group. I go into that in another article:
 
@@ -36,8 +36,8 @@ using (var groups = user.GetGroups()) {
 
 The [`GetGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.principal.getgroups) method does have a couple limitations:
 
-1. It uses the `memberOf` attribute, so **it has the limitations stated in [my other article]({% post_url 2018-09-13-one-user-is-member-of-a-group %})**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
-2. If `GetGroups()` comes across any AD object with forward slashes (`/`) in either the name of the objet itself, or the name of the OU, it will throw an exception. This is a [a bug](https://github.com/dotnet/corefx/issues/29090).
+1. It uses the `memberOf` attribute, so **it has the limitations stated in [my other article]({% post_url 2018-06-07-what-makes-a-member %}#beware-of-memberof)**. However, it also does a seperate lookup for the user's primary group, which you may or may not care about.
+2. If `GetGroups()` comes across any AD object with forward slashes (`/`) in either the name of the objet itself, or the name of the OU, it will throw an exception. This is [a bug](https://github.com/dotnet/corefx/issues/29090).
 
 There is also a separate method for authorization groups:
 
@@ -47,7 +47,7 @@ using (var authorizationGroups = user.GetAuthorizationGroups()) {
 }
 ```
 
-The [`GetAuthorizationGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.userprincipal.getauthorizationgroups) method will give you **only Security Groups** (not Distribution Lists) that the user is a member of, as well as all the groups those groups are in, etc. It will include Domain Local groups on the same domain as the user.
+The [`GetAuthorizationGroups()`](https://docs.microsoft.com/en-ca/dotnet/api/system.directoryservices.accountmanagement.userprincipal.getauthorizationgroups) method will give you **only Security groups** (not Distribution groups) that the user is a member of, as well as all the groups those groups are in, etc. It will include Domain Local groups on the same domain as the user.
 
 If you're curious, this method works in one of two ways:
 
@@ -62,7 +62,7 @@ Note that I have seen `GetAuthorizationGroups()` return `Everyone`, but not all 
 
 ### `System.DirectoryServices`
 
-If you're willing to do a little extra work, you can get much better performance by using `DirectoryEntry` and `DirectorySearcher` directly (the `AccountManagement` namespace uses those in the background anyway).
+If you're willing to do a little extra work, you can get **much better performance** by using `DirectoryEntry` and `DirectorySearcher` directly (the `AccountManagement` namespace uses those in the background anyway).
 
 None of these examples will likely be exactly what you need. You may be starting with different information about the user account (maybe just a `distinguishedName` or the `sAMAccountName`), or you may need to come away with different values. Modify these examples as needed. You may even want to combine several of these examples together.
 
@@ -70,7 +70,7 @@ For simplicity, these examples assume you already have a `DirectoryEntry` object
 
 #### Using `memberOf`
 
-Here is a method that will use the `memberOf` attribute and return the name of each group.
+Here is a method that will use the `memberOf` attribute and return the name of each group. This is appropriate if you are in a single-domain environment, or if you are in a single-forest environment and you only care about Universal groups. Read [Beware of `memberOf`]({% post_url 2018-06-07-what-makes-a-member %}#beware-of-memberof) for details.
 
 ```c#
 private static IEnumerable<string> GetUserMemberOf(DirectoryEntry de) {

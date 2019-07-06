@@ -1,0 +1,11 @@
+_id: 5e09b570-3322-11e9-93e2-55aff897f43f
+_parent: 5e09b570-3322-11e9-93e2-55aff897f43f
+name: oldovets
+email: 4d2cb3742252378efe06867ee127ec00
+url: ''
+message: >-
+  One little notice here. I assume that GetGroupMemberList method will end with
+  stackoverflow if I have GroupA as a member of GroupB and GroupB as a member of
+  GroupA. A simple HashSet solution won't work here as users of GroupA are
+  members of GroupB and users of GroupB are members of GroupA as well )
+date: '2019-02-18T02:10:31.435Z'

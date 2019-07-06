@@ -91,6 +91,8 @@ If you need to account for Foreign Security Principals, they are a little tricky
 
 The SID will actually tell you the domain because the first part of the SID is specific to the domain, whereas the very last section of numbers in the SID is specific to the object. So in this method, we first look up all the domain trusts and create a mapping table between each domain's SID and its DNS name.
 
+The code that looks for the domains (like `Domain.GetDomain()` and `domain.GetAllTrustRelationships()`) make calls out to AD to find that information. To gain performance, you can either hard-code the domain names in (if your code will only be run in one AD environment) or cache them the first time you find them.
+
 ```c#
 public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool recursive = false, Dictionary<string, string> domainSidMapping = null) {
     var members = new List<string>();
@@ -137,9 +139,13 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
                     //The SID of the domain is the SID of the user minus the last block of numbers
                     var foreignDomainSid = foreignUserSid.Substring(0, foreignUserSid.LastIndexOf("-"));
                     if (domainSidMapping.TryGetValue(foreignDomainSid, out var foreignDomainDns)) {
-                        using (var foreignUser = new DirectoryEntry($"LDAP://{foreignDomainDns}/<SID={foreignUserSid}>")) {
-                            foreignUser.RefreshCache(new[] { "msDS-PrincipalName" });
-                            members.Add(foreignUser.Properties["msDS-PrincipalName"].Value.ToString());
+                        using (var foreignMember = new DirectoryEntry($"LDAP://{foreignDomainDns}/<SID={foreignUserSid}>")) {
+                            foreignMember.RefreshCache(new[] { "msDS-PrincipalName", "objectClass" });
+                            if (recursive && foreignMember.Properties["objectClass"].Contains("group")) {
+                                members.AddRange(GetGroupMemberList(foreignMember, true, domainSidMapping));
+                            } else {
+                                members.Add(foreignMember.Properties["msDS-PrincipalName"].Value.ToString());
+                            }
                         }
                     } else {
                         //unknown domain
