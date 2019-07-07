@@ -80,7 +80,7 @@ All the images we want end up with a file extension of `.bin`, even though they 
 
 Exploring the files, I found that the emojis start at resource #430, and end at 1405. So I deleted all the other files. But there are still 4 resolutions, and I just want one. In Windows Explorer, when using the "detailed" view, you can right-click the headings and click "More" to add whatever property as a heading. So I added "Width" and "Height". Then I sorted by width and delted everything that did not have a width of 20. There were still several files I didn't want, but it was manageable. (the "smoking" emoji is actually there, but there is no character combination I could find that uses that)
 
-{% include image.html url="/assets/images/skype-explorer.png" description="All the files before I deleted that larger resolutions" %}
+{% include image.html url="/assets/images/skype-explorer.png" description="All the files before I deleted the larger resolutions" %}
 
 At this point I went through all 220 files and renamed them to the name of the emojis. This was boring, but it had to be done at some point.
 
@@ -88,7 +88,7 @@ At this point I went through all 220 files and renamed them to the name of the e
 
 I separated the animations into a new folder by sorting the files by height, and moving all files with a height more than 20.
 
-My original thought was to make them all into animated GIFs. But that plan was foiled too. It turns out that each frame of the animations are PNG because they use alpha transparency around the edges. Unfortunately, animated GIFs don't support alpha transparency - pixels are either 100% opaque or 100% transparent. I originally tried to make them GIFs, but then it still only looked good on white backgrounds. So **I had to go with animated PNGs**.
+My original thought was to **make them all into animated GIFs**. But that plan was foiled too. It turns out that each frame of the animations are PNG because they use alpha transparency around the edges. Unfortunately, animated GIFs don't support alpha transparency - pixels are either 100% opaque or 100% transparent. I originally tried to make them GIFs, but then it still only looked good on white backgrounds. So **I had to go with animated PNGs**.
 
 I used [ImageMagick](https://imagemagick.org/) to split the frames of the animation out of the single files. Unfortunately, ImageMagick doesn't support animated PNGs. But this was a start:
 
@@ -109,7 +109,7 @@ That went through every folder and assembled the frames into a single animated P
 
 ## Using the animations
 
-The first hurdle was getting IE11 to use the animations, since it doesn't support animated PNGs. I found a wonderful library called [apng-canvas](https://github.com/davidmz/apng-canvas) that will help me do that. Using that library, you can just call `APNG.animateImage(imgElement)` for any image element with an animated PNG.
+Our organization still IE11 and Chrome, so the first hurdle was getting IE11 to use the animations, since it doesn't support animated PNGs. I found a wonderful library called [apng-canvas](https://github.com/davidmz/apng-canvas) that will help me do that. Using that library, you can just call `APNG.animateImage(imgElement)` for any image element with an animated PNG.
 
 I found some code online that I can run on page load to test for APNG support, so I'm not running this code unnecessarily on real browsers. This is the code I used:
 
@@ -125,11 +125,11 @@ After that, I can just check `APNGSupport` to see if we're using a real browser.
 
 ## Stopping the animations
 
-As discussed earlier, SfB will stop the animation after a little while. I like this feature since having a bunch of animations constantly moving on screen can get annoying. SfB loops the animation a specific number of times before stopping, but since I can't count the number of loops in a browser, I decided to just use a hard time limit.
+As discussed earlier, **SfB will stop the animation after a little while**. I like this feature since having a bunch of animations constantly moving on screen can get annoying. SfB loops the animation a specific number of times before stopping, but since I can't count the number of loops in a browser, I decided to just use a hard time limit of 30 seconds.
 
-But to complicate things, the apng-canvas library changes the `img` tag to a `canvas`. So I had to figure out how to follow that change. This is the code I came up with when replacing specific characters (like `:)`) with an emoji:
+But to complicate things, the apng-canvas library changes the `img` tag to a `canvas`. So I had to figure out how to follow that change. This is the code I came up with when replacing specific characters (like `:p`) with an emoji, where `emojis` is my array of emoji objects (as defined at the end of this article):
 
-    _emojis.forEach(function(e) {
+    emojis.forEach(function(e) {
         if (APNGSupport) {
             text = text.replace(e.characters, "<img class='chat-emoji' alt='" + e.characters + "' aria-label='" + e.name.replace("\'", "&#39;") + " emoji' title='" + e.name.replace("\'", "&#39;") + "' src='" + chatSvcRoot + "/images/emoji/" + e.fileName + "_animated.png' onload='var _this = this; setTimeout(function() { _this.src = \"" + chatSvcRoot + "/images/emoji/" + e.fileName + ".png\"; }, 30000);' />");
         } else {
@@ -142,7 +142,7 @@ That replaces the characters with an image, but also has an `onload` event that 
 
 ## The Data
 
-After all this, I'm not going to make you do this yourself (although I'm not entirely sure how many people would really want this). But here are all the images I extracted:
+After telling you all this, I'm not going to make you do this yourself (although I'm not entirely sure how many people would really want this). But here are all the images I extracted and used:
 
 <a href="{{ site.url }}/assets/download/sfb-emoji.zip" class="buttons">Download Skype for Business Emojis</a>
 
@@ -153,9 +153,9 @@ Below is the table I painstakingly compiled of all the possible character combin
 These are the properties I include here:
 
 - `name`: The name that Skype for Business uses in the pop-up emoji chooser.
-- `characters`: The characters that should be replaced with the emoji. You'll see lots of duplicates since most emojis have different character combinations for the same emoji (e.g. `:)` and `:-)`). **These are case-sensitive!** Not all character combinations work with upper and lower case (I tested).
+- `characters`: The characters that should be replaced with the emoji. Most emojis have different character combinations for the same emoji (e.g. `:o` and `:-o`). **These are case-sensitive!** Not all character combinations work with upper and lower case (I tested).
 - `fileName`: The name that I used for the image file. Note that adding `.png` will give you the static image, and adding `_animated.png` will give you the animated one.
-- `isDefault`: If `true`, then this is the character combination that SfB advartises in the pop-up emoji chooser. The only difference is for the "puke" emoji. SfB is actually wrong. It tells you that `:&` works, but it doesn't. You need to double-up on the ampersand: `:&&`
+- `isDefault`: If `true`, then this is the character combination that SfB advertises in the pop-up emoji chooser. The only difference is for the "puke" emoji. SfB is actually wrong. It tells you that `:&` works, but it doesn't. You need to double-up on the ampersand: `:&&`
 
 <!-- -->
 
