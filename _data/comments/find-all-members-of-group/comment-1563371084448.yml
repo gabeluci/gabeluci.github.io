@@ -1,0 +1,12 @@
+_id: 08adc7a0-a899-11e9-8196-e12ffcf38fcc
+_parent: 70182840-a867-11e9-8196-e12ffcf38fcc
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com/'
+message: >-
+  That's what my examples above return: the "DOMAIN\Username". It does so by
+  getting the
+  [`msDS-PrincipalName`](https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/808ac90e-e80d-4ce4-ad24-cb462dd06820).
+  That's a constructed attribute, meaning that it is calculated at the time you
+  ask for it. But that also means you can't use it as a filter in a search.
+date: '2019-07-17T13:44:44.433Z'
