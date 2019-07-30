@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Better Performance"
+title: "Better performance"
 category: "Active Directory"
 permalink: /active-directory/:year/:month/:day/:title:output_ext
 comments: true
