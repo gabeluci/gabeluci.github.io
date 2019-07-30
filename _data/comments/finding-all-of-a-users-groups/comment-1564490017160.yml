@@ -1,0 +1,7 @@
+_id: 407bba70-b2c6-11e9-bda4-8fe0c7a77466
+_parent: 33765240-b29e-11e9-bda4-8fe0c7a77466
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: "You can just use a `static` [`HashSet<string>`](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.hashset-1) and add the domains the first time you find them. A `HashSet` is better than `List` since it will prevent duplicates.\r\nIf you have trouble with it, post what you've come up with on [Stack Overflow](https://stackoverflow.com) some someone will be able to help you."
+date: '2019-07-30T12:33:37.123Z'
