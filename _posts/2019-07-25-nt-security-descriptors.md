@@ -4,17 +4,41 @@ title: "Handling NT Security Descriptor Attributes"
 category: "Active Directory"
 permalink: /active-directory/:year/:month/:day/:title:output_ext
 comments: true
-published: false
 ---
 
 # {{page.category}}: {{page.title}}
 
+Active Directory has several attributes that store permissions. The attribute type is called "NT Security Descriptor", or [String(NT-Sec-Desc)](https://docs.microsoft.com/en-us/windows/win32/adschema/s-string-nt-sec-desc). These are the attributes I know of:
+
+- [`fRSRootSecurity`](https://docs.microsoft.com/en-us/windows/win32/adschema/a-frsrootsecurity)
+- [`msDFS-LinkSecurityDescriptorv2`](https://docs.microsoft.com/en-us/windows/win32/adschema/a-msdfs-linksecuritydescriptorv2)
+- [`msDS-AllowedToActOnBehalfOfOtherIdentity`](https://docs.microsoft.com/en-us/windows/win32/adschema/a-msds-allowedtoactonbehalfofotheridentity)
+- [`msDS-GroupMSAMembership`](https://docs.microsoft.com/en-us/windows/win32/adschema/a-msds-groupmsamembership)
+- [`nTSecurityDescriptor`](https://docs.microsoft.com/en-us/windows/win32/adschema/a-ntsecuritydescriptor)
+- [`pKIEnrollmentAccess`](https://docs.microsoft.com/en-us/windows/win32/adschema/a-pkienrollmentaccess)
+
+The `nTSecurityDescriptor` attribute is a special one. It contains the access permissions for the AD object itself. It's what you see when you look at the 'Security' tab in AD Users and Computers. Most methods of access AD objects will have an easy way to read this data. For example, `DirectoryEntry` has an [`ObjectSecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.objectsecurity) attribute to read this. But there is no obvious way to work with the other ones.
+
+In these examples, I'll focus on the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute, since this is used when configuring Resource-Based Kerberos Constrained Delegation, which can, for example, help you solve [PowerShell's dreaded double-hop problem](https://blogs.technet.microsoft.com/ashleymcglone/2016/08/30/powershell-remoting-kerberos-double-hop-solved-securely/).
+
+PowerShell makes this easier by making exposing a property called `PrincipalsAllowedToDelegateToAccount` in [`Get-ADUser`](https://docs.microsoft.com/en-us/powershell/module/addsadministration/get-aduser) and [`Set-ADUser`](https://docs.microsoft.com/en-us/powershell/module/addsadministration/set-aduser), which just reads and writes the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute. Even if we try to access the raw data, it gives us an [`ActiveDirectorySecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectorysecurity) object. That's handy.
+
+```ps
+PS C:\> $u = Get-ADUser SomeUsername -Properties "msDS-AllowedToActOnBehalfOfOtherIdentity"
+PS C:\> $u."msDS-AllowedToActOnBehalfOfOtherIdentity".GetType()
+
+IsPublic IsSerial Name                                     BaseType
+-------- -------- ----                                     --------
+True     False    ActiveDirectorySecurity                  System.Security.AccessControl.DirectoryObjectSecurity
+```
+
+But it's not so obvious how to work with this attributes, and the others, in .NET. So here we'll look at two options.
 
 ## Getting the value from `DirectoryEntry`
 
-The documentation for [String(NT-Sec-Desc)](https://docs.microsoft.com/en-us/windows/win32/adschema/s-string-nt-sec-desc) says that we'll get **"A COM object that can be cast to an [`IADsSecurityDescriptor`](https://docs.microsoft.com/en-ca/windows/win32/api/iads/nn-iads-iadssecuritydescriptor)."** That's exactly what we see when we try to get the value from `DirectoryEntry`.
+The documentation for [String(NT-Sec-Desc)](https://docs.microsoft.com/en-us/windows/win32/adschema/s-string-nt-sec-desc) says that we'll get **"A COM object that can be cast to an [`IADsSecurityDescriptor`](https://docs.microsoft.com/en-ca/windows/win32/api/iads/nn-iads-iadssecuritydescriptor)."** That's exactly what we see when we try to get the value from `DirectoryEntry`: a COM object.
 
-But to be able to use the `IADsSecurityDescriptor` type, we will need to add a COM reference in Visual Studio to *Active DS Type Library*:
+But to be able to use the `IADsSecurityDescriptor` interface, we will need to add a COM reference in Visual Studio to *Active DS Type Library*:
 
 1. Right-click 'References' in the Solution Explorer
 2. Click 'Add Reference...'
@@ -34,15 +58,15 @@ var act = (IADsSecurityDescriptor)
 
 You *can* just work with it like that, but it would be a little easier if we get it into a managed type.
 
-It's interesting to note that the permissions for an AD object are stored in the `ntSecurityDescriptor` attribute, but the `DirectoryEntry` class presents it as a property called [`ObjectSecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.objectsecurity), which is of type [`ActiveDirectorySecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectorysecurity). **How does `DirectoryEntry` translate the `ntSecurityDescriptor` attribute into an `ActiveDirectorySecurity` attribute?**
+Remeber I mentioned that `DirectoryEntry` gives us a handy property to read/write the `ntSecurityDescriptor` attribute called [`ObjectSecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.objectsecurity), which is of type [`ActiveDirectorySecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectorysecurity). **How does `DirectoryEntry` translate the `ntSecurityDescriptor` attribute into an `ActiveDirectorySecurity` attribute?** And more importantly, how to *we* do it?
 
 The source code for .NET Core is now available, so we can look at [the source code for `DirectoryEntry`](https://github.com/dotnet/corefx/blob/master/src/System.DirectoryServices/src/System/DirectoryServices/DirectoryEntry.cs) to find out. The key is in the [`GetObjectSecurityFromCache`](https://github.com/dotnet/corefx/blob/master/src/System.DirectoryServices/src/System/DirectoryServices/DirectoryEntry.cs#L1078) method. It does a few things:
 
 1. Cast the [`NativeObject`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.nativeobject) property to [`IAdsPropertyList`](https://docs.microsoft.com/en-us/windows/win32/api/iads/nn-iads-iadspropertylist).
-2. Calls [`IAdsPropertyList::GetPropertyItem`](https://docs.microsoft.com/en-us/windows/win32/api/iads/nf-iads-iadspropertylist-getpropertyitem) to retrieve the attribute, and casts it to [`IADsPropertyEntry`](https://docs.microsoft.com/en-us/windows/win32/api/iads/nn-iads-iadspropertyentry).
-3. Casts the first value in the `IADsPropertyEntry.Values` array to  `IADsPropertyValue`.
+2. Call [`IAdsPropertyList::GetPropertyItem`](https://docs.microsoft.com/en-us/windows/win32/api/iads/nf-iads-iadspropertylist-getpropertyitem) to retrieve the attribute, and casts it to [`IADsPropertyEntry`](https://docs.microsoft.com/en-us/windows/win32/api/iads/nn-iads-iadspropertyentry).
+3. Cast the first value in the `IADsPropertyEntry.Values` array to  `IADsPropertyValue`.
 4. Get the raw byte array of the attribute using `IADsPropertyValue.OctetString`.
-5. Uses the `byte[]` to create a new `ActiveDirectorySecurity` object.
+5. Use the `byte[]` to create a new `ActiveDirectorySecurity` object.
 
 Unfortunately, we can't do step 5 ourselves because [the constructor that it uses](https://github.com/dotnet/corefx/blob/a10890f4ffe0fadf090c922578ba0e606ebdd16c/src/System.DirectoryServices/src/System/DirectoryServices/ActiveDirectorySecurity.cs#L61) is marked [`internal`](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/internal).
 
@@ -103,8 +127,8 @@ var act = (IADsSecurityDescriptor)
 var secUtility = new ADsSecurityUtility();
 var byteArray = (byte[]) secUtility.ConvertSecurityDescriptor(
                             act,
-                            (int)ADS_SD_FORMAT_ENUM.ADS_SD_FORMAT_IID,
-                            (int)ADS_SD_FORMAT_ENUM.ADS_SD_FORMAT_RAW
+                            (int) ADS_SD_FORMAT_ENUM.ADS_SD_FORMAT_IID,
+                            (int) ADS_SD_FORMAT_ENUM.ADS_SD_FORMAT_RAW
                          );
 
 var security = new CommonSecurityDescriptor(true, true, byteArray, 0);
