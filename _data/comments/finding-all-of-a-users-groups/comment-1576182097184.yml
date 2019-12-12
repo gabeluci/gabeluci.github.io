@@ -1,0 +1,7 @@
+_id: ff484e80-1d1c-11ea-b9ce-e557dca254e6
+_parent: ff484e80-1d1c-11ea-b9ce-e557dca254e6
+name: Charlie
+email: 31f1add7c042f1f7dfffedc1b456895b
+url: ''
+message: "Thanks Gabe!\r\nIn our environment the trust was configured at the forest level so I had to change \r\n\r\nvar trusts = d.GetAllTrustRelationships();\r\n\r\nto\r\n\r\nvar trusts = d.Forest.GetAllTrustRelationships();\r\n\r\nWanted to post for anyone else with this configuration."
+date: '2019-12-12T20:21:37.174Z'
