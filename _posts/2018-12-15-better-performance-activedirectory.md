@@ -17,7 +17,7 @@ When it comes to programming against AD, or any LDAP directory for that matter, 
 
 Let's talk about ways you a can minimize both.
 
-While this article concentrates on .NET and specifically C#, the principals apply to any programming language that can make LDAP queries.
+While this article concentrates on .NET and specifically C#, it's really just using LDAP in the background. So the principals apply to any programming language that can make LDAP queries.
 
 ## Don't use `System.DirectoryServices.AccountManagement`
 
@@ -25,17 +25,17 @@ The [`AccountManagement`](https://docs.microsoft.com/en-us/dotnet/api/system.dir
 
 ## Use `System.DirectoryServices`
 
-You have much more control over how many network requests are made, and how much data gets retrieved by using `DirectoryEntry` and `DirectorySearcher` directly. However, you do need to be careful in how you use them, since it's easy to write code that performs poorly. We'll talk about some principals here that really apply to LDAP in general and not just .NET or Active Directory.
+**You have much more control** over how many network requests are made, and how much data gets retrieved by using `DirectoryEntry` and `DirectorySearcher` directly. However, you do need to be careful in how you use them, since it's easy to write code that performs poorly. We'll talk about some principals here that really apply to LDAP in general and not just .NET or Active Directory.
 
 ### If you ask for nothing, you get everything
 
-`DirectorySearcher` has a property called [`PropertiesToLoad`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directorysearcher.propertiestoload). This is a list of the attributes that you want to retrieve in the search for each object found. But here's the trick: **if you don't add anything to the list, it will return *every* attribute** (except constructed attributes).
+LDAP allows you to specify which attributes you want returned for each result returned in a search. The `DirectorySearcher` class has a property called [`PropertiesToLoad`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directorysearcher.propertiestoload) for this. But here's the trick: **if you don't specify any attributes, it will return *every* attribute** (except constructed attributes).
 
 At best this is a slight waste of bandwidth. At worst, this can get very expensive. For example, if your organization uses the `thumbnailPhoto` attribute to store pictures of everyone (this is what will show up in Outlook, for example), then that can be up to 100kB of data that is returned for every result found, regardless of if you actually use that information.
 
 You won't really notice anything if you're just searching for one user. But if you are, say, building a report of every user object on your domain, then this will add up!
 
-Here is a simple example of returning the email address of every user on the domain:
+Here is a simple example of returning the email address (and *only* the email address) of every user on the domain:
 
 ```c#
 public IEnumerable<string> EveryEmailAddress() {
@@ -43,6 +43,8 @@ public IEnumerable<string> EveryEmailAddress() {
         PageSize = 1000,
         Filter = "(objectClass=user)"
     };
+    
+    //make sure only the mail attribute is sent back
     search.PropertiesToLoad.Add("mail");
     
     using (var results = search.FindAll()) {
@@ -55,17 +57,18 @@ public IEnumerable<string> EveryEmailAddress() {
 }
 ```
 
-The lesson? **Always add *something* to `PropertiesToLoad`**.
+The lesson? **Always specify the attributes you want returned in a search.**
 
 ### If you ask for one thing, you get everything
 
 This is the same principal as above, but with `DirectoryEntry`. Each instance of `DirectoryEntry` holds a cache of the attributes. When you access the [`Properties`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.properties) collection to read an attribute, it checks the cache first to see if it already has the value. If it doesn't, **it retrieves every attribute** (except constructed attributes).
 
-To avoid this, **use [`RefreshCache()`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.refreshcache#System_DirectoryServices_DirectoryEntry_RefreshCache_System_String___)** to load specific properties into the cache before you use them. This example shows how to retrieve *only the `mail` attribute* before using it:
+To avoid this, **use [`RefreshCache()`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.refreshcache#System_DirectoryServices_DirectoryEntry_RefreshCache_System_String___)** to load specific properties into the cache before you use them. This example shows how to retrieve *only the `mail` and `displayName` attributes* before using them:
 
 ```c#
-ds.RefreshCache(new [] { "mail" });
-var email = (string) ds.Properties["mail"]?.Value;
+de.RefreshCache(new [] { "mail", "displayName" });
+var email = (string) de.Properties["mail"]?.Value;
+var displayName = (string) de.Properties["displayName"]?.Value;
 ```
 
 ### Don't use `GetDirectoryEntry()`
@@ -92,7 +95,9 @@ public IEnumerable<string> EveryEmailAddress() {
 
 We know that the search will return every attribute for every user found. Then we're using `GetDirectoryEntry()` to create a new `DirecotryEntry` object **with an empty cache**. So once we do `de.Properties["mail"]`, it goes back out to AD and gets every attribute *again*.
 
-Even if we apply the two rules above, we will still be making two network requests when we only need to make one. The only reason to use `GetDirectoryEntry()` is **if you're going to modify the object**.
+Even if we apply the two rules above, we will still be making two network requests when we only need to make one. We can instead use the value returned during the search: `result.Properties["mail"][0]`.
+
+The only reason to use `GetDirectoryEntry()` is **if you're going to modify the object**.
 
 ### Clean up after yourself
 
@@ -102,7 +107,7 @@ The documentation of [`SearchResultCollection`](https://docs.microsoft.com/en-us
 
 For this reason, you will see in all my examples that I **put the call to `DirectorySearcher.FindAll()` in a `using` block**.
 
-Although `DirectoryEntry` also implements `IDisposable`, you don't *normally* need to bother disposing it. Garbage collection does a good job of it. However, **if you are looping over a large number of accounts** and creating a new `DirectoryEntry` each time, garbage collection won't have time to run until the loop finishes. That means that all of those `DirectoryEntry` objects will be adding up in memory and can slow down your application due to your application having to constantly as the OS for more memory.
+Although `DirectoryEntry` also implements `IDisposable`, you don't *normally* need to bother disposing it. Garbage collection does a good job of it. However, **if you are looping over a large number of accounts** and creating a new `DirectoryEntry` each time, garbage collection won't have time to run until the loop finishes. That means that all of those `DirectoryEntry` objects will be adding up in memory and can slow down your application due to your application having to constantly ask the OS for more memory.
 
 An example of this is the code in my [Find all the members of a group]({% post_url 2018-11-30-find-all-members-of-group %}) post where it loops through the `memberOf` attribute and creates a new `DirectoryEntry` object to check if it's a group. **In these cases, put the `DirectoryEntry` in a `using` block**.
 
@@ -151,4 +156,4 @@ public IEnumerable<string> GetEmailAddressesE(IEnumerable<string> usernames) {
 }
 ```
 
-You do have to be aware that because you're doing a search doesn't necessarily mean you will get a result. So you may decide you need to verify that you indeed got all the results you expected. You could just compare numbers (if I asked for 100 accounts, did I get 100?) or you could change this to return a `Dictionary<string, string>` with the `sAMAccountName` as the key and the `mail` attribute as the value so you can check which ones are missing. But all of that verification is done in memory and it still *waaayy* faster than doing a separate search for each account.
+You do have to be aware that because you're doing a search doesn't necessarily mean you will get a result. So you may decide you need to verify that you indeed got all the results you expected. You could just compare numbers (if I asked for 100 accounts, did I actually get 100 back?) or you could change this to return a `Dictionary<string, string>` with the `sAMAccountName` as the key and the `mail` attribute as the value so you can check which ones are missing. But all of that verification is done in memory and it still *waaayy* faster than doing a separate search for each account.
