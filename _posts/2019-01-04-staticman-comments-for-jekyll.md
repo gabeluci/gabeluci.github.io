@@ -26,7 +26,7 @@ There are several walk-throughs online about how to set this up, but the ones I 
 
 Because the public Staticman API [is in trouble](https://github.com/eduardoboucas/staticman/issues/222), I decided to [host my own Staticman instance]({% post_url 2019-01-03-create-staticman-instance %}). Read that article if you're curious about how I did it.
 
-This article will cover inplementing the comments into the actual Jekyll pages. However, be aware that there are a few things I did that depend on running my own instance, since I changed the Staticman code to make it happen.
+This article will cover implementing the comments into the actual Jekyll pages. However, be aware that there are a few things I did that depend on running my own instance, since I changed the Staticman code to make it happen.
 
 Feel free to skip the sections you don't care about, but:
 
@@ -60,7 +60,7 @@ Also encrypt the domain you used for Mailgun (in my case, `mg.gabescode.com`) an
 
 Spam comments is an awful problem. So I decided to use reCAPTCHA. I don't know if the new [reCAPTCHA v3](https://developers.google.com/recaptcha/docs/v3) will work here (which is designed to not ask the user for anything). I created my reCAPTCHA account using the [v2 checkbox](https://developers.google.com/recaptcha/docs/display).
 
-Take the site key the give you an put it (not encrypted) into the `siteKey` property of the Staticman config.
+Take the site key they give you and put it (not encrypted) into the `siteKey` property of the Staticman config.
 
 The "secret" they give you needs to be encrypted and put into the `secret` property.
 
@@ -168,7 +168,7 @@ Staticman.prototype.processEntry = function (fields, options) {
 
 So now when a new top-level comment is made, `_parent` is set to the newly-generated `_id` and that is used to create the mailing list.
 
-> **If you're using the public Staticman API**, you could probably do something similar by generating your own unique identifier in JavaScript for top-level comments and put that in `_parent`, then use that in replies too. But then you would another field (called something like `isTopLevelComment`) that indicates what is a top-level a comment and what is not.
+> **If you're using the public Staticman API**, you could probably do something similar by generating your own unique identifier in JavaScript for top-level comments and put that in `_parent`, then use that in replies too. But then you would need another field (called something like `isTopLevelComment`) that indicates what is a top-level comment and what is not.
 
 Staticman does send out an email right away (even when a top-level comment is made). That's not always desirable, but if you have moderation turned on it does serve the purpose of notifying the person that their comment was approved, although it uses the same email template as a reply, so it says "Someone replied to a comment you subscribed to". I might decide to change that some time, but maybe not.
 
