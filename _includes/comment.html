@@ -24,7 +24,7 @@
           <time datetime="{{ include.date | date_to_xmlschema }}">{{ include.date | date_to_long_string }}</time>
         {% if include.id %}</a>{% endif %}
       {% endif %}
-    </header>
+    </div>
     <div class="comment__message">
       {{ include.message | markdownify }}
     </div>
