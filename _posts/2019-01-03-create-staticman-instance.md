@@ -143,8 +143,8 @@ After=network.target
 [Service]
 Environment=NODE_ENV=production
 Type=simple
-User=Ubuntu
-ExecStart=/usr/local/bin/node /var/www/staticman/index.js
+User=daemon
+ExecStart=/usr/bin/node /var/www/staticman/index.js
 Restart=on-failure
 
 [Install]
@@ -217,7 +217,7 @@ a2ensite comments.gabescode.com
 service apache2 reload
 ```
 
-At this point, I could go to [http://comments.gabescode.com](http://comments.gabescode.com) and see the message "Hello from Staticman version 2.0.0!"
+At this point, I could go to [http://comments.gabescode.com](http://comments.gabescode.com) and see the message "Hello from Staticman version 3.0.0!"
 
 Awesome!
 
