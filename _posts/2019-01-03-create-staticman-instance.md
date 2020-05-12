@@ -19,25 +19,11 @@ So let me describe my adventure. Feel free to skip the sections that aren't rele
 
 ## Install NodeJS
 
-Staticman is written in [NodeJS](https://nodejs.org), so I had to install it on my server. The VPS I already have ($15/year from [ChicagoVPS](https://www.chicagovps.net/services/cloud-vps)) has only 128MB of RAM and runs Ubuntu Trusty. Not a whole lot of power, and an old version of Ubuntu, but it has served me well for the [tiny websites](https://convertgasprices.com) I have running on there.
+Staticman is written in [NodeJS](https://nodejs.org), so I had to install it on my server. The VPS I already have ($15/year from [ChicagoVPS](https://www.chicagovps.net/services/cloud-vps)) has only 128MB of RAM and originally ran Ubuntu Trusty (14.04), but I've since updated it to Xenial (16.04). Not a whole lot of power, and an old version of Ubuntu, but it has served me well for the [tiny websites](https://convertgasprices.com) I have running on there.
 
-I found out the hard way that the version of NodeJS in the Ubuntu Trusty repository is a *really* old version that didn't work at all with Staticman. Instead, I needed to add a repository to apt before installing NodeJS.
+I found out the hard way that the version of NodeJS in the Ubuntu Trusty repository is a *really* old version that didn't work at all with Staticman. Instead, I needed to add a repository to apt before installing NodeJS. Even after I updated to Xenial, I found that NodeJS installed from the Ubuntu repository didn't work as expected, so I suggest you use the NodeJS repositories.
 
-The process is described [here](https://github.com/nodesource/distributions/blob/master/README.md#debinstall). The instructions they give downloads and runs a script that attempts to add the correct repository for the version of NodeJS you want and the version of Ubuntu you're running. But the error messages are sort of lacking, so it took me a while to figure out that there is no package for NodeJS 11.x for Trusty. So I had to install version 10.
-
-The effect of all that was to create a file at `/etc/apt/sources.list.d/nodesource.list` with this content:
-
-    deb https://deb.nodesource.com/node_10.x trusty main
-    deb-src https://deb.nodesource.com/node_10.x trusty main
-
-You could just do that yourself if needed, or just browse to [that URL](https://deb.nodesource.com/node_10.x) (and change the version number) if you need to experiment with which version is available for your version of Ubuntu (if you're dealing with an older version of Ubuntu like me).
-
-Once the repository is added, you can update and install it:
-
-    sudo apt-get update
-    sudo apt-get install nodejs
-
-Cool. That finally worked.
+The process is described [here](https://github.com/nodesource/distributions/blob/master/README.md#debinstall). Choose the version of NodeJS you want to install and run the commands they show you. For Trusty, I had to install NodeJS version 10. If you're running a newer version of Ubuntu, use the latest version.
 
 Many NodeJS apps (including Staticman) rely on an environment variable called `NODE_ENV`, which indicates the environment you are running in (development, production, etc.). To add a [system-wide environment variable](https://help.ubuntu.com/community/EnvironmentVariables#System-wide_environment_variables) in Ubuntu, edit the `/etc/environment` file and add this line (I only have one server for this, so I'm calling it "production"):
 
@@ -58,12 +44,16 @@ The Staticman instructions say to run this:
 However, that failed. Not being terribly experienced with Git, it took me a while to figure out that when you use `git@github.com:`, it is actually using the [SSH protocol](https://gist.github.com/grawity/4392747) to connect, which requires that you already have an RSA key created on your computer and added to your GitHub account so it can authenticate you. We will actually end up doing that later, but for now, it makes a whole lot more sense to just use HTTPS:
 
     git clone https://github.com/eduardoboucas/staticman
+    
+I did end up changing some code in Staticman for some features I wanted, which I described in [my other article]({% post_url 2019-01-04-staticman-comments-for-jekyll %}). If you want to use my fork, use this:
+
+    git clone --single-branch --branch accepted-notifications https://github.com/gabeluci/staticman.git
 
 ## `npm install` Killed!
 
 The next step is to run `npm install` to download all the dependencies. Well that just didn't work. It ran for a couple seconds, then gave me the message: `Killed`
 
-That, too, took me a while to figure out. It turns out that's what happens when it runs out of memory. Y'know, because my VPS only has 128MB of RAM.
+That, too, took me a while to figure out. It turns out that's what happens when it runs out of memory. Y'know, because my VPS only has 128MB of RAM. So you can skip this section if you're running this on a real computer.
 
 A popular recommendation is to just create a swap partition (or increase the size if you already have one), but my VPS didn't allow me to have a swap partition.
 
@@ -75,7 +65,7 @@ I ended up finding [this Gist](https://gist.github.com/SuperPaintman/851b330c08b
 
 I added the `-s` to run it in silent mode, since even outputting to the console takes memory, which we want to avoid.
 
-Finally, it worked.
+However, that doesn't always work. The easiest fallback is to use another computer, even a Windows computer will work if you have NodeJS installed. Clone the code and run `npm install` on that computer, then copy the entire `node_modules` folder over to your server.
 
 Now let's switch gears for a moment and
 
@@ -135,13 +125,41 @@ Since I will be using Apache as a proxy, I want to prevent the outside world fro
 this.instance = this.server.listen(config.get('port'), '127.0.0.1', () => {
 ```
 
-> I did end up changing some other code in Staticman, which I described in [my other article]({% post_url 2019-01-04-staticman-comments-for-jekyll %}).
+> This specific change is not in my fork. If you want this, you will have to change it yourself.
 
 ## Make Staticman a Service
 
-We want Staticman to start when the server starts and restart if it fails for whatever reason - just stay running! If you search, you will find various ways of doing this, like [installing an NPM module called PM2](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-18-04), or [using systemctl](https://hackernoon.com/making-node-js-service-always-alive-on-ubuntu-server-e20c9c0808e4), but both of those required me to install something. I already knew I could run services (like Apache) with `service apache2 start`, so I wanted to set this up the same way.
+We want Staticman to start when the server starts and restart if it fails for whatever reason - just stay running! I already knew I could run services (like Apache) with `service apache2 start`, so I wanted to set this up the same way. When I originally set this up, I was running
 
-Ubuntu's service manager is called [Upstart](http://upstart.ubuntu.com/). Once I figured that out, I could search for the right thing and found [this](https://gist.github.com/willrstern/3510ecef59c3f76b0152). It was as easy as creating a file called `/etc/init/staticman.conf` with this content:
+### Modern versions of Ubuntu (15.04+)
+
+Ubuntu's service manager is called [systemd](https://www.freedesktop.org/wiki/Software/systemd/). Setting up Staticman to be a service is as easy as creating the file `/etc/systemd/system/staticman.service` with this content:
+
+```
+[Unit]
+Description=Staticman
+After=network.target
+
+[Service]
+Environment=NODE_ENV=production
+Type=simple
+User=Ubuntu
+ExecStart=/usr/local/bin/node /var/www/staticman/index.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+That tells systemd to run Staticman after the network is up and to restart it if it fails. Then you can run the service:
+
+```bash
+service staticman start
+```
+
+### Ubuntu Trusty (14.04)
+
+Older versions of Ubuntu use [Upstart](http://upstart.ubuntu.com/). Once I figured that out, I could search for the right thing and found [this](https://gist.github.com/willrstern/3510ecef59c3f76b0152). It was as easy as creating a file called `/etc/init/staticman.conf` with this content:
 
 ```
 start on filesystem and started networking
@@ -185,6 +203,12 @@ ProxyPass /.well-known/ !
 ```
 
 are for [Let's Encrypt](https://letsencrypt.org/), which I'll talk more about later. That `ProxyPass` directive *must* come before the others. It tells Apache to *not* proxy any requests to the `.well-known` directory, which Let's Encrypt uses to verify you own the domain. The `DocumentRoot` directive ensures those requests will serve any files in `/var/www/.well-known`.
+
+Just make sure you have the proxy module enabled:
+
+```bash
+sudo a2enmod proxy_http
+```
 
 Once that was setup, I could enable the site:
 
