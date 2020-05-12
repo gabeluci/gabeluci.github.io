@@ -129,10 +129,10 @@ The `port` you choose is up to you. I already had Apache running on my server, s
 
 At this point you should be able to run `npm start` and it should work! If so, hit Ctrl+C. There's more work to do.
 
-Since I will be using Apache as a proxy, I want to prevent the outside world from *directly* accessing Staticman on port 8080, I edited [line 154 in `server.js`](https://github.com/eduardoboucas/staticman/blob/master/server.js#L154) so that it would only listen on the local loopback IP (127.0.0.1). This ensures that *only* Apache can access it:
+Since I will be using Apache as a proxy, I want to prevent the outside world from *directly* accessing Staticman on port 8080, I edited [line 174 in `server.js`](https://github.com/eduardoboucas/staticman/blob/master/server.js#L174) so that it would only listen on the local loopback IP (127.0.0.1). This ensures that *only* Apache can access it:
 
 ```js
-this.server.listen(config.get('port'),'127.0.0.1', callbackFn)
+this.instance = this.server.listen(config.get('port'), '127.0.0.1', () => {
 ```
 
 > I did end up changing some other code in Staticman, which I described in [my other article]({% post_url 2019-01-04-staticman-comments-for-jekyll %}).
