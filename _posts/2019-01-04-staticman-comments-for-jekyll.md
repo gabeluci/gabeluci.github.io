@@ -156,10 +156,10 @@ The solution is to copy the `_id` of the top-level comment into `_parent` (so th
 
 This is where running your own instance of Staticman is handy. I ended up modifying the code to copy the `_id` into `_parent` if `_parent` is empty.
 
-First thing inside the [`Staticman.prototype.processEntry`](https://github.com/eduardoboucas/staticman/blob/master/lib/Staticman.js#L456) function, I added this:
+First thing inside the [`processEntry`](https://github.com/eduardoboucas/staticman/blob/master/lib/Staticman.js#L503) function, I added this:
 
 ```js
-Staticman.prototype.processEntry = function (fields, options) {
+processEntry (fields, options) {
   if (!options.parent) {
     options.parent = this.uid
   }
