@@ -155,6 +155,12 @@ WantedBy=multi-user.target
 
 That tells systemd to run Staticman after the network is up and to restart it if it fails. The `RestartSec` and `StartLimitIntervalSec` lines tell it to restart after 30 of a failure and to never stop retrying. Because my VPS has such low memory, it would periodically crash when other jobs ran. But then systemd would restart it immediately, which would fail again and systemd would stop trying. Adding those lines gives other jobs the chance to finish and free up memory before retrying and make sure it always keeps trying to bring it back up. The sensible solution is really just to have a server with more than 128MB of RAM.
 
+Then enable the service to make sure it runs at startup:
+
+```bash
+systemctl enable staticman
+```
+
 Then you can run the service:
 
 ```bash
