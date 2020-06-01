@@ -1,0 +1,10 @@
+_id: 07f72ff0-a45f-11ea-8558-176f39e60f65
+_parent: 07f72ff0-a45f-11ea-8558-176f39e60f65
+name: Pradeep
+email: 5eb5fe226964dd0b94ba60a3b47f7a43
+url: ''
+message: >-
+  How do I execute the range queries on "tokenGroups" attribute? My
+  ActiveDirectory has a limit of 2050 on the "tokenGroups" attribute results.
+  How can I fetch the remaining groups using the range queries?
+date: '2020-06-01T23:24:25.501Z'
