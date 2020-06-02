@@ -1,0 +1,11 @@
+_id: 0f3a09b0-a467-11ea-a30e-4bd0ca28d817
+_parent: 07f72ff0-a45f-11ea-8558-176f39e60f65
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: ''
+message: >-
+  Range retrieval is done exactly the same way, regardless of the attribute. So
+  you can take the example above of using `memberOf` and replace that with
+  `tokenGroups`. But 2050 is not any limit that AD uses, so I don't think that
+  will help you.
+date: '2020-06-02T00:21:53.715Z'
