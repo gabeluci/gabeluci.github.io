@@ -669,25 +669,26 @@ input,textarea {
 }
 
 h2 a, h3 a {
-  display: none;
+  visibility: hidden;
   margin-left: 5px;
   border: none;
 }
 
+h3 a svg {
+  height: 15px;
+  width: 15px;
+}
+
 h2 a:hover, h3 a:hover {
   border: none;
-  position: relative;
-  top: 1px;
-  right: 1px;
 }
 
 h2 a:hover svg, h3 a:hover svg {
-  zoom: 110%;
   fill: #ab0611;
 }
 
 h2:hover a, h3:hover a {
-  display: inline;
+  visibility: visible;
 }
 
 @media print, screen and (max-width: 960px) {
