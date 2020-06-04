@@ -668,6 +668,28 @@ input,textarea {
   opacity: 0;
 }
 
+h2 a, h3 a {
+  display: none;
+  margin-left: 5px;
+  border: none;
+}
+
+h2 a:hover, h3 a:hover {
+  border: none;
+  position: relative;
+  top: 1px;
+  right: 1px;
+}
+
+h2 a:hover svg, h3 a:hover svg {
+  zoom: 110%;
+  fill: #ab0611;
+}
+
+h2:hover a, h3:hover a {
+  display: inline;
+}
+
 @media print, screen and (max-width: 960px) {
 
   div.wrapper {
