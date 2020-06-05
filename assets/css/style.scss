@@ -668,26 +668,26 @@ input,textarea {
   opacity: 0;
 }
 
-h2 a, h3 a {
+h2 a, h3 a, h4 a {
   visibility: hidden;
   margin-left: 5px;
   border: none;
 }
 
-h3 a svg {
+h3 a svg, h4 a svg {
   height: 15px;
   width: 15px;
 }
 
-h2 a:hover, h3 a:hover {
+h2 a:hover, h3 a:hover, h4 a:hover {
   border: none;
 }
 
-h2 a:hover svg, h3 a:hover svg {
+h2 a:hover svg, h3 a:hover svg, h4 a:hover svg {
   fill: #ab0611;
 }
 
-h2:hover a, h3:hover a {
+h2:hover a, h3:hover a, h4:hover a {
   visibility: visible;
 }
 
