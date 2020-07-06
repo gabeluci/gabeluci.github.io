@@ -80,7 +80,7 @@ Because of the two points above, **don't use [`SearchResult.GetDirectoryEntry()`
 public IEnumerable<string> EveryEmailAddress() {
     var search = new DirectorySearcher(new DirectoryEntry()) {
         PageSize = 1000,
-        Filter = "(objectClass=user)"
+        Filter = "(&(objectClass=user)(objectCategory=person))"
     };
     
     using (var results = search.FindAll()) {
@@ -124,7 +124,7 @@ How long can you make your query? Well, there is no hard limit, but the *entire 
 As an example, here is a method that will take a collection of usernames and get all their email addresses in blocks of 50 at a time:
 
 ```c#
-public IEnumerable<string> GetEmailAddressesE(IEnumerable<string> usernames) {
+public IEnumerable<string> GetEmailAddresses(IEnumerable<string> usernames) {
     var filter = new StringBuilder();
     var numUsernames = 0;
     
@@ -140,7 +140,7 @@ public IEnumerable<string> GetEmailAddressesE(IEnumerable<string> usernames) {
         if (numUsernames == 50 || !hasMore) {
             var search = new DirectorySearcher(new DirectoryEntry()) {
                 PageSize = 1000,
-                Filter = $"(&(objectClass=user)(|{filter}))"
+                Filter = $"(&(objectClass=user)(objectCategory=person)(|{filter}))"
             };
             search.PropertiesToLoad.Add("mail");
             
