@@ -1,0 +1,14 @@
+_id: 1773ae90-d64b-11ea-8adf-79a1e673fc59
+_parent: 4a1a0330-d5bf-11ea-a9fb-d5e1122ed8a5
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: >-
+  Are you running your own instance of Staticman? You need the added code in
+  `processEntry` that I listed under the [Per-Thread
+  Notifications](http://www.gabescode.com/staticman/2019/01/04/staticman-comments-for-jekyll.html#per-thread-notifications]
+  heading. If you're using my fork of the project from GitHub, you need to use
+  the
+  [accepted-notifications](https://github.com/gabeluci/staticman/tree/accepted-notifications)
+  branch.
+date: '2020-08-04T12:07:39.804Z'
