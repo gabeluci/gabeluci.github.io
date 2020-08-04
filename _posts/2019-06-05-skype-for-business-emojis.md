@@ -107,7 +107,7 @@ To create the animated PNG files, I used another free program: [APNG Assembler](
 
 ``` bat
 FOR /D %d IN (*) DO (
-    apngasm64.exe "..\%d.png" "%d\%d-*.png"
+    apngasm64 "..\%d.png" "%d\%d-*.png"
 )
 ```
 
@@ -167,8 +167,10 @@ These are the properties I include here:
 - `fileName`: The name that I used for the image file. Note that adding `.png` will give you the static image, and adding `_animated.png` will give you the animated one.
 - `isDefault`: If `true`, then this is the character combination that SfB advertises in the pop-up emoji chooser. The only difference is for the "puke" emoji. SfB is actually wrong. It tells you that `:&` works, but it doesn't. You need to double-up on the ampersand: `:&&`
 
-<details>
-<summary>**View the JSON here**</summary>
+<button class="btn" onclick="toggleDisplay('emojiJson')">View JSON</button>&nbsp;
+<button class="btn" onclick="copyTextFromElement('emojiJson')">Copy JSON to clipboard</button>
+
+<div id="emojiJson" style="display:none">
 
 ``` js
 [
@@ -488,4 +490,5 @@ These are the properties I include here:
     { name: "Heart", characters: "<3", fileName: "heart", isDefault: true}
 ]
 ```
-</details>
+
+</div>

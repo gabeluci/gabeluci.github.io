@@ -63,6 +63,32 @@ function hideAlert() {
     $("#respond .js-notice-text").html("");
 }
 
+function copyTextFromElement(e) {
+    if (document.selection) { // IE
+        var range = document.body.createTextRange();
+        range.moveToElementText(document.getElementById(e));
+        range.select();
+    } else if (window.getSelection) {
+        var range = document.createRange();
+        range.selectNode(document.getElementById(e));
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand("copy");
+        window.getSelection().removeAllRanges();
+    }
+}
+
+function toggleDisplay(e) {
+    if (typeof e === "string") {
+        e = document.getElementById(e);
+    }
+    if (e.style.display === "none") {
+        e.style.display = "";
+    } else {
+        e.style.display = "none";
+    }
+}
+
 // Staticman comment replies
 // modified from Wordpress https://core.svn.wordpress.org/trunk/wp-includes/js/comment-reply.js
 // Released under the GNU General Public License - https://wordpress.org/about/gpl/
