@@ -1,0 +1,7 @@
+_id: 37611920-d666-11ea-b7bf-55b269d4c775
+_parent: 4a1a0330-d5bf-11ea-a9fb-d5e1122ed8a5
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: "There is already my fork that has all the changes: https://github.com/gabeluci/staticman/tree/accepted-notifications\r\nBut forking it doesn't mean it's hosted anywhere. Many people have deployed to Heroku. There's a button in the [Introduction](https://github.com/gabeluci/staticman/tree/accepted-notifications#introduction) section of the README that can start that process for you. I don't use Heroku, so I can't help any further with that. But search online and you'll find articles about it."
+date: '2020-08-04T15:21:49.624Z'
