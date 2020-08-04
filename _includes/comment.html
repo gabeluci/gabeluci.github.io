@@ -21,7 +21,7 @@
       {% if include.date %}
         on
         {% if include.id %}<a href="#comment{% if r %}{{ id | prepend: '-' }}{% else %}{{ include.id | prepend: '-' }}{% endif %}" title="Permalink to this comment">{% endif %}
-          <time datetime="{{ include.date | date_to_xmlschema }}">{{ include.date | date_to_long_string }}</time>
+          <time datetime="{{ include.date | date_to_xmlschema }}">{{ include.date | date: "%B %-d, %Y" }}</time>
         {% if include.id %}</a>{% endif %}
       {% endif %}
     </div>
