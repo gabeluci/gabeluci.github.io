@@ -77,6 +77,7 @@ var addComment = {
         t = this,
         comm = t.I(commId),
         respond = t.I(respondId),
+        commentHeadingText = t.I("comment-heading-text"),
         cancel = t.I("cancel-comment-reply-link"),
         parent = t.I("comment-replying-to"),
         post = t.I("comment-post-slug"),
@@ -102,6 +103,7 @@ var addComment = {
         }
         parent.value = parentId;
         cancel.style.display = "";
+        commentHeadingText.innerText = "Replying";
 
         cancel.onclick = function() {
             var t = addComment,
@@ -117,6 +119,7 @@ var addComment = {
             temp.parentNode.removeChild(temp);
             this.style.display = "none";
             this.onclick = null;
+            commentHeadingText.innerText = "Leave a comment";
             return false;
         };
 

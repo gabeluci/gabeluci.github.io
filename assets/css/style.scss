@@ -641,8 +641,7 @@ input,textarea {
 }
 
 #cancel-comment-reply-link {
-  margin-left: 1em;
-  color: #b11313
+  float: right;
 }
 
 .notice {
@@ -672,6 +671,10 @@ h2 a, h3 a, h4 a {
   visibility: hidden;
   margin-left: 5px;
   border: none;
+}
+
+#comments h2 a {
+  visibility: visible;
 }
 
 h3 a svg, h4 a svg {
