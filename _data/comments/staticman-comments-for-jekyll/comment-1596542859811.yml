@@ -6,7 +6,7 @@ url: 'https://gabescode.com'
 message: >-
   Are you running your own instance of Staticman? You need the added code in
   `processEntry` that I listed under the [Per-Thread
-  Notifications](http://www.gabescode.com/staticman/2019/01/04/staticman-comments-for-jekyll.html#per-thread-notifications]
+  Notifications](http://www.gabescode.com/staticman/2019/01/04/staticman-comments-for-jekyll.html#per-thread-notifications)
   heading. If you're using my fork of the project from GitHub, you need to use
   the
   [accepted-notifications](https://github.com/gabeluci/staticman/tree/accepted-notifications)
