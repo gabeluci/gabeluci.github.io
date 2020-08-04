@@ -17,11 +17,11 @@ Active Directory has several attributes that store permissions. The attribute ty
 - [`nTSecurityDescriptor`](https://docs.microsoft.com/en-us/windows/win32/adschema/a-ntsecuritydescriptor)
 - [`pKIEnrollmentAccess`](https://docs.microsoft.com/en-us/windows/win32/adschema/a-pkienrollmentaccess)
 
-The `nTSecurityDescriptor` attribute is a special one. It contains the access permissions for the AD object itself. It's what you see when you look at the 'Security' tab in AD Users and Computers. Most methods of access AD objects will have an easy way to read this data. For example, `DirectoryEntry` has an [`ObjectSecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.objectsecurity) attribute to read this. But there is no obvious way to work with the other ones.
+The `nTSecurityDescriptor` attribute is a special one. It contains the access permissions for the AD object itself. It's what you see when you look at the 'Security' tab in AD Users and Computers. Most methods of accessing AD objects will have an easy way to read this data. For example, `DirectoryEntry` has an [`ObjectSecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.objectsecurity) attribute to read this. But there is no obvious way to work with the other ones.
 
 In these examples, I'll focus on the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute, since this is used when configuring Resource-Based Kerberos Constrained Delegation, which can, for example, help you solve [PowerShell's dreaded double-hop problem](https://blogs.technet.microsoft.com/ashleymcglone/2016/08/30/powershell-remoting-kerberos-double-hop-solved-securely/).
 
-PowerShell makes this easier by making exposing a property called `PrincipalsAllowedToDelegateToAccount` in [`Get-ADUser`](https://docs.microsoft.com/en-us/powershell/module/addsadministration/get-aduser) and [`Set-ADUser`](https://docs.microsoft.com/en-us/powershell/module/addsadministration/set-aduser), which just reads and writes the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute. Even if we try to access the raw data, it gives us an [`ActiveDirectorySecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectorysecurity) object. That's handy.
+PowerShell makes this easier by exposing a property called `PrincipalsAllowedToDelegateToAccount` in [`Get-ADUser`](https://docs.microsoft.com/en-us/powershell/module/addsadministration/get-aduser) and [`Set-ADUser`](https://docs.microsoft.com/en-us/powershell/module/addsadministration/set-aduser), which just reads and writes the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute. Even if we try to access the raw data, it gives us an [`ActiveDirectorySecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectorysecurity) object. That's handy.
 
 ```powershell
 PS C:\> $u = Get-ADUser SomeUsername -Properties "msDS-AllowedToActOnBehalfOfOtherIdentity"
@@ -32,7 +32,7 @@ IsPublic IsSerial Name                                     BaseType
 True     False    ActiveDirectorySecurity                  System.Security.AccessControl.DirectoryObjectSecurity
 ```
 
-But it's not so obvious how to work with this attributes, and the others, in .NET. So here we'll look at two options.
+But it's not so obvious how to work with this attributes (and the others) in .NET. So here we'll look at two options.
 
 ## Getting the value from `DirectoryEntry`
 
@@ -119,7 +119,7 @@ user.CommitChanges();
 
 ### The code
 
-Here is the code all together. I assume you already have a `DirectoryEntry` object called `user` and you have added a COM reference to "Active DS Type Library" to your project.
+Here is the code all together. This assumes you already have a `DirectoryEntry` object called `user` and you have added a COM reference to "Active DS Type Library" to your project.
 
 ```c#
 var act = (IADsSecurityDescriptor)
@@ -133,7 +133,7 @@ var byteArray = (byte[]) secUtility.ConvertSecurityDescriptor(
 
 var security = new CommonSecurityDescriptor(true, true, byteArray, 0);
 
-//modify security object
+//modify security object here
 
 var descriptor_buffer = new byte[security.BinaryLength];
 security.GetBinaryForm(descriptor_buffer, 0);
@@ -144,7 +144,7 @@ user.CommitChanges();
 
 ## Getting the value from `DirectorySearcher`
 
-There are a few cases where `DirectorySearcher` will give you a value in a different format than `DirectoryEntry`. This is one of those cases. In fact, `DirectorySearcher` makes it even easier on us, since it gives us the raw binary value without a fight. **That means we don't need to add a COM reference to our project.**
+There are a few cases (in general) where `DirectorySearcher` will gives you values in a different format than `DirectoryEntry`. This is one of those cases. In fact, `DirectorySearcher` makes it even easier on us, since it gives us the raw binary value without a fight. **That means we don't need to add a COM reference to our project.**
 
 This example will find an account with the username `myUsername`, and create a `CommonSecurityDescriptor` object:
 
