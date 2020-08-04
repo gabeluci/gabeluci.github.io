@@ -38,6 +38,7 @@
         <h1 class="header"><a href="/">{{ site.title | default: site.github.repository_name }}</a></h1>
         <p class="header">{{ site.description | default: site.github.project_tagline }}</p>
         {% if page.category %}
+          <div class="category-heading">{{page.category}}</div>
           <hr>
           {% assign sorted_posts = site.categories[page.category] | sort: date %}
           <ul>
@@ -49,6 +50,7 @@
             <li><a href="{{ site.baseurl }}{{  post.url }}" class="{{ current }}">{{  post.title }}</a></li>
             {% endfor %}
           </ul>
+          <p class="header"><a href="/">more...</a></p>
         {% endif %}
         <p id="stackoverflowflair">
           <a href="https://stackoverflow.com/users/1202807/gabriel-luci">

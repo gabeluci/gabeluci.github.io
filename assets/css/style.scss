@@ -342,9 +342,8 @@ header ul {
 }
 
 header li {
-	list-style-type: none;
-  /*width:132px;
-  height:15px;*/
+  list-style-type: none;
+  position: relative;
 }
 header li a {
   display: block;
@@ -374,6 +373,12 @@ header li a.current, header li a.current:hover {
   box-shadow: none;
 }
 
+header li a.current::before {
+  content: "▶";
+  position: absolute;
+  left: -15px;
+}
+
 header li a:hover {
   border: 1px solid #0D0D0D;
 	background: #C3001D;
@@ -383,6 +388,15 @@ header li a:hover {
   background: -o-linear-gradient(top, #C3001D 0%,#950119 100%);
   background: -ms-linear-gradient(top, #C3001D 0%,#950119 100%);
   background: linear-gradient(to top, #C3001D 0%,#950119 100%);
+}
+
+header .category-heading {
+  text-align: center;
+  font-weight: bold;
+}
+
+header .category-heading + hr {
+  margin: 0 0 3px;
 }
 
 a.buttons {
