@@ -167,10 +167,10 @@ These are the properties I include here:
 - `fileName`: The name that I used for the image file. Note that adding `.png` will give you the static image, and adding `_animated.png` will give you the animated one.
 - `isDefault`: If `true`, then this is the character combination that SfB advertises in the pop-up emoji chooser. The only difference is for the "puke" emoji. SfB is actually wrong. It tells you that `:&` works, but it doesn't. You need to double-up on the ampersand: `:&&`
 
-<button class="btn" onclick="toggleDisplay('emojiJson')">View JSON</button>&nbsp;
-<button class="btn" onclick="copyTextFromElement('emojiJson')">Copy JSON to clipboard</button>
+<button class="btn" onclick="toggleDisplay('emojiJson'); toggleDisplay('copyJson');">View JSON</button>&nbsp;
+<button id="copyJson" class="btn" onclick="copyTextFromElement('emojiJson')" style="display:none">Copy JSON to clipboard</button>
 
-<div id="emojiJson" style="display:none">
+<div id="emojiJson" style="display:none" markdown="1">
 
 ``` js
 [
