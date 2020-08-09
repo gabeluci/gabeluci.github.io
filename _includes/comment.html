@@ -26,7 +26,7 @@
       {% endif %}
     </div>
     <div class="comment__message">
-      {{ include.message | newline_to_br | markdownify }}
+      {{ include.message | markdownify }}
     </div>
     {% unless include.is_last == false or page.comments_locked == true %}
       <div class="comment__reply">
