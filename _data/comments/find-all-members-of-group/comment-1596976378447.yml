@@ -1,0 +1,7 @@
+_id: 74bedda0-da3c-11ea-9f85-b1d199a0f6e6
+_parent: 74bedda0-da3c-11ea-9f85-b1d199a0f6e6
+name: Steven Teale
+email: 6de74d2b5507bca6853f782db388ec60
+url: ''
+message: "Hello,\r\nI suspect that this article will be a life save for me but i do need a little help to get me over the line with some working code. \r\nCan you provide an example or two of a call to the GetGroupMemberList - the Foreign Security Principals version?\r\nI need to be able to resolve these down to a domain, DN, etc. They may be from either of two other domains. They also may be groups or users.\r\nI am still learning C# and also these AD objects and this will be a big help\r\nThanks very much,  Steve"
+date: '2020-08-09T12:32:58.439Z'
