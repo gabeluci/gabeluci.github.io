@@ -1,0 +1,7 @@
+_id: 02451210-da3e-11ea-8bd6-8dba3ec96ed9
+_parent: 74bedda0-da3c-11ea-9f85-b1d199a0f6e6
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: "You just need to pass it a `DirectoryEntry` object pointing to the group. That's all that's required. For example:\r\n\r\n``` c#\r\nvar group = new DirectoryEntry(\"LDAP://CN=MyGroup,OU=Groups,DC=example,DC=com\");\r\nvar members = GetGroupMemberList(group);\r\n```\r\n\r\nIf you want a recursive list of members, then just pass `true` for the `recursive` parameter: `GetGroupMemberList(group, true)`\r\n\r\nYou don't need to worry about the `domainSidMapping` parameter because it's created inside the method. It's only a parameter so that it can be passed when the method calls itself, saving time."
+date: '2020-08-09T12:44:05.306Z'
