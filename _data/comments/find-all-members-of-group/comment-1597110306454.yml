@@ -1,0 +1,11 @@
+_id: 48207f40-db74-11ea-a11c-ab7ffa143360
+_parent: 609ec960-db5a-11ea-a11c-ab7ffa143360
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: >-
+  `Everyone` isn't a real group. It's one of the [well-known
+  SIDs](https://support.microsoft.com/en-ca/help/243330/well-known-security-identifiers-in-windows-operating-systems)
+  that means something only to Windows (and AD). It literally does mean
+  "everyone".
+date: '2020-08-11T01:45:06.452Z'
