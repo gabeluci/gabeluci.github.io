@@ -1,0 +1,10 @@
+_id: 24a2b190-e165-11ea-8ed9-f9c5169c20c6
+_parent: 24a2b190-e165-11ea-8ed9-f9c5169c20c6
+name: Thilo
+email: 5e7b27b27a500984fb3108d2b1ee4c76
+url: ''
+message: >-
+  GetGroupMemberList (Single-forest environments) returns users twice ore more,
+  if they are members of two or more recursive groups. In this case you should
+  return the account only once.
+date: '2020-08-18T15:11:51.546Z'
