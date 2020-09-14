@@ -1,0 +1,7 @@
+_id: dec4b110-f68f-11ea-b3a2-2f6cf00976d9
+_parent: 403ef6b0-f656-11ea-8dfb-2bea9c1b8069
+name: Robert
+email: 9e9d4ec8f9cccb32af742bde78e9dba5
+url: ''
+message: "Gabe, Sorry my first post was not complete:\r\n\r\nfunction = IsUserInGroup()\r\nfirst syntax, compiler problem: var filter = $\"(member{recursiveFilter}={userDn})\";\r\n\r\nI have also looked around and other users in other, but similar cases wrote that the problem could be fixed by installing a Nuget package.\r\nAnyway, my own abilities exceed this aim :-(\r\n\r\nBR"
+date: '2020-09-14T13:40:37.074Z'
