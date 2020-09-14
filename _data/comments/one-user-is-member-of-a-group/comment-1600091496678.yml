@@ -1,0 +1,7 @@
+_id: 67df9c20-f691-11ea-b03d-ff44e38ed297
+_parent: 403ef6b0-f656-11ea-8dfb-2bea9c1b8069
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: "That syntax is [string interpolation](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/tokens/interpolated), which was introduced in C# 6. It sounds like your project is using an older version of the language. You can use [`String.Format()`](https://docs.microsoft.com/en-us/dotnet/api/system.string.format) instead:\r\n\r\n```\r\nvar filter = String.Format(”(member{0}={1})”, recursiveFilter, userDn);\r\n```"
+date: '2020-09-14T13:51:36.671Z'
