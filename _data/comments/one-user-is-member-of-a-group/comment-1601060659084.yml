@@ -1,0 +1,7 @@
+_id: e9b97ee0-ff61-11ea-b8d5-691c5e5a3e9d
+_parent: b7f8a020-ff5c-11ea-98fd-2db5f0281939
+name: Krissy
+email: 0e8f85932feb21522db9954394fc0aae
+url: ''
+message: "My question is in regards to the user and group variables of type DirectoryEntry that are used in the function call.\r\n\r\nI am currently using DirectoryEntry and DirectorySearcher to authenticate an AD user. To locate the user's group, I was using windowsPrincipal.IsInRole. That works fine if the application is pointed to the AD domain that I am logged into, but it doesn't work when the application is pointed to a different trusted domain. I'm trying to find another way to verify a user's groups.\r\n\r\nWhen your function refers to \"DirectoryEntry user\", is that referring to the username property of DirectoryEntry? In regards to \"Directory Entry group\", is that a second DirectoryEntry object? The only other way I know to get AD groups is to do a DirectorySearcher with the property of \"memberOf\". The issue with that approach is that I need to search for parent and child groups which can be performance intensive. I'm trying to test this code to see if it's a better option for me. Thanks for the assistance."
+date: '2020-09-25T19:04:19.077Z'
