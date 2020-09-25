@@ -1,0 +1,7 @@
+_id: 49f73b50-ff74-11ea-a1e6-e1c308ac17ee
+_parent: b7f8a020-ff5c-11ea-98fd-2db5f0281939
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: "*When your function refers to “DirectoryEntry user”, is that referring to the username property of DirectoryEntry?* - No, it's referring to the `DirectoryEntry` object itself, not a property of it.\r\n\r\nThe `group` parameter is a second object. This function checks if a user is a member of a specific group, so you need to tell it which group you are looking for. You create a `DirectoryEntry` for a group the same way you do for a user. For example, `New DirectoryEntry(\"LDAP://CN=MyGroup,OU=Groups,DN=example,DC=com\")`.\r\n\r\nIf you're looking at an external, trusted domain, then you can include the domain DNS name (or even a specific domain controller) in the LDAP path, like this: `New DirectoryEntry(\"LDAP://example.com/CN=MyGroup,OU=Groups,DN=example,DC=com\")`\r\n\r\nIf you don't know the group, then this isn't the method you should be using. Maybe you want to [find all of the user's groups](http://www.gabescode.com/active-directory/2018/06/08/finding-all-of-a-users-groups.html)."
+date: '2020-09-25T21:15:51.515Z'
