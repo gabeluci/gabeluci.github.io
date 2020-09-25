@@ -1,0 +1,7 @@
+_id: b7f8a020-ff5c-11ea-98fd-2db5f0281939
+_parent: b7f8a020-ff5c-11ea-98fd-2db5f0281939
+name: Krissy Kernan
+email: 0e8f85932feb21522db9954394fc0aae
+url: ''
+message: "Hi Gabe, \r\n\r\nI'm trying to use your IsUserInGroup() code. I converted it to VB.net, but I'm not sure how to pass the DirectoryEntry user and group to the function. Can you please share that line of code?"
+date: '2020-09-25T18:27:08.116Z'
