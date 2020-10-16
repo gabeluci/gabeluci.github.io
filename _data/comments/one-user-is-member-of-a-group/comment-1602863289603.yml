@@ -1,0 +1,7 @@
+_id: fd3df750-0fc6-11eb-a26c-63d50163c491
+_parent: fd3df750-0fc6-11eb-a26c-63d50163c491
+name: Doug Belkofer
+email: 80ae7739bc28652976a6174646db44bd
+url: ''
+message: "In the code that recursively searches if the user is a member in the group, this section appears:\r\n\r\n    if (((int) group.Properties[\"groupType\"].Value & 8) == 0) {\r\n        var groupDomainDn = groupDn.Substring(\r\n            groupDn.IndexOf(\",DC=\", StringComparison.Ordinal));\r\n        var userDomainDn = userDn.Substring(\r\n            userDn.IndexOf(\",DC=\", StringComparison.Ordinal));\r\n        if (groupDomainDn != userDomainDn) {\r\n            //It's a Domain Local group, and the user and group are on\r\n\r\nYou're checking if the group type bitwise anded with 8, which is the bitmask for universal groups, based on my understanding, but your comment at the end says \"It's a Domain Local group\". My understanding is that the bitmask for Domain Local groups is 4, not 8.\r\n\r\nCan you clarify which part is correct, or if my understanding is wrong?\r\n\r\nMy understanding is based on this link:\r\nhttps://ldapwiki.com/wiki/GroupType"
+date: '2020-10-16T15:48:09.595Z'
