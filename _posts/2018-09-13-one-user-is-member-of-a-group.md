@@ -60,7 +60,7 @@ private static bool IsUserInGroup(DirectoryEntry user, DirectoryEntry group, boo
     
     var filter = $"(member{recursiveFilter}={userDn})";
 
-    if (((int) group.Properties["groupType"].Value & 8) == 0) {
+    if (((int) group.Properties["groupType"].Value & 4) == 4) {
         var groupDomainDn = groupDn.Substring(
             groupDn.IndexOf(",DC=", StringComparison.Ordinal));
         var userDomainDn = userDn.Substring(
