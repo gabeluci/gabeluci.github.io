@@ -1,0 +1,7 @@
+_id: 851fd0b0-0fc9-11eb-853e-77dea7390920
+_parent: fd3df750-0fc6-11eb-a26c-63d50163c491
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: "That `if` statement is saying \"if it's *not* a universal group\". Then it checks if the user and group are on different domains. A global group could pass the \"not universal\" test, but global groups can't have members from other domains. So if we get into the second `if`, then we know it's domain local. But you are right that the `if` could be simplified to just check if it's a domain local group right away rather than \"not a universal group\". I'll update that to be:\r\n\r\n```\r\nif (((int) group.Properties[\"groupType\"].Value & 4) == 4)\r\n```"
+date: '2020-10-16T16:06:16.561Z'
