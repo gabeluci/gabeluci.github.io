@@ -1,0 +1,11 @@
+_id: ea3ece60-101e-11eb-a54f-f306a4e1dadf
+_parent: 12fa2380-1016-11eb-a91a-c549b967d4ee
+name: Doug Belkofer
+email: 80ae7739bc28652976a6174646db44bd
+url: ''
+message: >-
+  Ugh... just realized that foreign security principals do not have a primary
+  group. Well, at least the question about global groups possibly having FSP's
+  as members is still valid - can a foreign security prinicipal be added to
+  Domain Users?
+date: '2020-10-17T02:17:33.358Z'
