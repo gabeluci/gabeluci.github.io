@@ -1,0 +1,12 @@
+_id: d0172030-101b-11eb-ad6f-27d945c29f5b
+_parent: 12fa2380-1016-11eb-a91a-c549b967d4ee
+name: Doug Belkofer
+email: 80ae7739bc28652976a6174646db44bd
+url: ''
+message: >-
+  While testing my new code, I discovered something I wasn't expecting - Domain
+  Users is not a domain local group. It has the Global Group bit set, and the
+  Security group bit set (0x80000002). So it looks like that group type should
+  also be considered as a possible group that can have FSP's as members. I think
+  maybe if it has 0x2 set or 0x4 set - does that sound right to you?
+date: '2020-10-17T01:55:21.058Z'
