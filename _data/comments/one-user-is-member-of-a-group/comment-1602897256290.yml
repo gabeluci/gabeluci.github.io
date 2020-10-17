@@ -1,0 +1,7 @@
+_id: 12fa2380-1016-11eb-a91a-c549b967d4ee
+_parent: 12fa2380-1016-11eb-a91a-c549b967d4ee
+name: Doug Belkofer
+email: 80ae7739bc28652976a6174646db44bd
+url: ''
+message: "I thought of a scenario that I think your code doesn't handle. What if I'm checking if a user in domain A is in a group in domain B, and the domain B group is the primary group of the FSP of the user in domain B?\r\n\r\nIn other words, A\\johndoe has an FSP in domain B, B\\S-1-2-blahblah, and the group you're checking is B\\Domain Users, and B\\Domain Users is the primary group of B\\S-1-2-blahblah.\r\n\r\nI've modified my code to add an additional step to check if the FSP's primary group matches the group being checked to cover this, but you have to retrieve the primary group ID of the user's FSP to do it."
+date: '2020-10-17T01:14:16.284Z'
