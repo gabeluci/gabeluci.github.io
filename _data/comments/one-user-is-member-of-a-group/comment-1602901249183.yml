@@ -1,0 +1,7 @@
+_id: 5eeec8f0-101f-11eb-b4d5-8dac5177bc47
+_parent: 12fa2380-1016-11eb-a91a-c549b967d4ee
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: "That isn't something that can happen, so you don't have to worry about it. \U0001F642 Global groups cannot contain users from other domains, which also means they cannot contain foreign security principals (even though the FSP object is on the same domain). And foreign security principals don't have a `primaryGroupID` attribute."
+date: '2020-10-17T02:20:49.171Z'
