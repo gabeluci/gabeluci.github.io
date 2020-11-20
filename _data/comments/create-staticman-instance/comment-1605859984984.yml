@@ -1,0 +1,7 @@
+_id: 36e28640-2b08-11eb-a6dd-354e0da728c2
+_parent: 36e28640-2b08-11eb-a6dd-354e0da728c2
+name: Alex
+email: dca9c5c259a6ead30527746c4d7bb07a
+url: ''
+message: "Hi Gabe, thanks for doing these posts on setting up Staticman. I've been following along and I've run into this problem when I try to post a comment:\r\n\r\n\"Error: Error during decryption (probably incorrect key). Original error: Error: error:04099079:rsa routines:RSA_padding_check_PKCS1_OAEP_mgf1:oaep decoding error\"\r\n\r\nI generated my key the way you've described and I've tried both deleting new lines and replacing them with \"\\n\", do you have any ideas?"
+date: '2020-11-20T08:13:04.975Z'
