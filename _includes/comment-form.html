@@ -14,11 +14,15 @@
           <input type="url" id="comment-form-url" name="fields[url]" placeholder="https://domain.com">
         </label>
       </div>
-      <div class="notice">
+      <div class="notice" style="margin-bottom: 1em">
           Your email address is used to display your <a href="https://en.gravatar.com">Gravatar</a>, if applicable,
           and subscribe you to replies using the <a href="https://www.mailgun.com">Mailgun</a> web service,
           which you are free to unsubscribe from when you get any emails.
           Your email address will not be displayed publicly or shared with anyone else.
+      </div>
+      <div class="notice" style="margin-bottom: 1em">
+          <strong>Comments are moderated.</strong> Your comment will be reviewed by a human before being posted to
+          this page. Any comment made for the purpose of advertising will not be approved.
       </div>
       <div class="form__group">
         <label for="comment-form-message">Comment
@@ -32,7 +36,7 @@
       <input type="hidden" name="options[reCaptcha][secret]" value="{{ site.reCaptcha.secret }}">
       <input type="hidden" name="options[subscribe]" value="email">
       <div class="g-recaptcha form__group" data-sitekey="{{ site.reCaptcha.siteKey }}"></div>
-      <button type="submit" id="comment-form-submit">Send comment</button>
+      <button type="submit" id="comment-form-submit">Submit comment</button>
     </form>
     <div class="hidden js-notice notice">
       <p class="js-notice-text"></p>
