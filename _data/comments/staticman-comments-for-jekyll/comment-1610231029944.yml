@@ -1,0 +1,11 @@
+_id: 58be1b10-52c9-11eb-8bb1-79ecb2eb683c
+_parent: 95dc1160-52c3-11eb-a7bc-b562fac623a2
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: >-
+  Yes, the email templates are in
+  [lib/Notification.js](https://github.com/eduardoboucas/staticman/blob/master/lib/Notification.js).
+  Assuming you're hosting your own instance of Staticman, you can just modify
+  that file.
+date: '2021-01-09T22:23:49.938Z'
