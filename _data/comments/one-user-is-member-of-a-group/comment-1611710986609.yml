@@ -1,0 +1,7 @@
+_id: 23a47a40-603f-11eb-b6d2-3b73802d5f86
+_parent: 12fa2380-1016-11eb-a91a-c549b967d4ee
+name: Doug Belkofer
+email: 80ae7739bc28652976a6174646db44bd
+url: ''
+message: "OK, I think I thought of a real-world scenario that your example IsUserInGroup() method won't handle. User U1 is a member of domain A, and is in A's Domain Users group, which is the user U1's primary group. A\\Domain Users is a member of group G2 in domain B, via a foreign security principal that is associated to A\\Domain Users.\r\n\r\nI've actually seen this at my job, so I know it can happen. Also, my experience has been that by default, user membership in the Domain Users group is almost always via it being their primary group. Yes, a user can have a different group as their primary group, but it starts out as Domain Users when the user is created, at least with Active Directory.\r\n\r\nIt seems to be able to be addressed fairly simply - you just need to update the code that adds all of the groups the user is a member of to the filter to also add the user's primary group, to cover the case where the user's primary group is a member of the other domain group.\r\n\r\nFinally, I want to thank you again for sharing all of this code and very understandable descriptions and explanations. All of it really helped me better understand the nuances of user & group membership."
+date: '2021-01-27T01:29:46.608Z'
