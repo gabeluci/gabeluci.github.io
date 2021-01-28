@@ -1,0 +1,11 @@
+_id: 51aac280-6177-11eb-9b6d-11dd5db26e90
+_parent: 51aac280-6177-11eb-9b6d-11dd5db26e90
+name: al
+email: f6d6fc6c79f986cca4a8526c6103ffe4
+url: ''
+message: >-
+  Thanks for this Gabe, this is very useful. Is there any way to change the
+  connection to be on UDP using directory entry class? Currently It runs on TCP
+  port 389 by default however due to some security restrictions i can only
+  unblock port 389 on UDP so need to run this over that.
+date: '2021-01-28T14:44:26.847Z'
