@@ -1,0 +1,11 @@
+_id: 2ed31830-617b-11eb-b7e8-add4b73b0e8a
+_parent: 51aac280-6177-11eb-9b6d-11dd5db26e90
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: >-
+  That would depend on the Active Directory server. You have to use TCP 389
+  because that's what the AD server is listening on. UDP isn't an option simply
+  because it isn't a good idea. TCP guarantees delivery of each packet, whereas
+  UDP does not.
+date: '2021-01-28T15:12:06.394Z'
