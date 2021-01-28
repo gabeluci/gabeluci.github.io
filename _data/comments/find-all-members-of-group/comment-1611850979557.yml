@@ -1,0 +1,11 @@
+_id: 15ee1040-6185-11eb-b705-434f80746bb9
+_parent: 51aac280-6177-11eb-9b6d-11dd5db26e90
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: >-
+  I haven't seen any way to tell `DirectoryEntry` to use UDP, and AD only has
+  very limited support for UDP. See here: [LDAP Search Over
+  UDP]https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-adts/3fad0ec9-414c-432a-ba0b-837c74091dd6):
+  "Active Directory supports search over UDP only for searches against rootDSE."
+date: '2021-01-28T16:22:59.551Z'
