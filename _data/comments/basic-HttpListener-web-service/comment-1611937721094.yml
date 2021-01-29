@@ -1,0 +1,10 @@
+_id: 0befb790-624f-11eb-b701-3d03568642c8
+_parent: babc56b0-6246-11eb-a72b-9548b333b649
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: >-
+  That is a good point. In fact, the [example in the documentation for
+  `volatile`](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/volatile#example)
+  has almost this exact use case. I'll update my code.
+date: '2021-01-29T16:28:41.087Z'
