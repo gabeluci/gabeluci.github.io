@@ -63,7 +63,7 @@ namespace MyService {
         /// <summary>
         /// A flag to specify when we need to stop
         /// </summary>
-        private static bool _keepGoing = true;
+        private static volatile bool _keepGoing = true;
 
         /// <summary>
         /// Keep the task in a static variable to keep it alive
