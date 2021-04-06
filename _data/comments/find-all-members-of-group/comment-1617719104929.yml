@@ -1,0 +1,7 @@
+_id: e12f05f0-96e3-11eb-a4f2-2362297e3697
+_parent: 24a2b190-e165-11ea-8ed9-f9c5169c20c6
+name: Thilo
+email: 5e7b27b27a500984fb3108d2b1ee4c76
+url: ''
+message: "I think there's another rpoblem with this: \r\ngroup.RefreshCache(new[] {$\"member;range={members.Count}-*\"});\r\n\r\nIf there are members in subgroups added to the members-List, the search on the root level will miss elements."
+date: '2021-04-06T14:25:04.919Z'
