@@ -53,6 +53,7 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
 
     group.RefreshCache(new[] { "member" });
 
+    var membersFound = 0;
     while (true) {
         var memberDns = group.Properties["member"];
         foreach (string member in memberDns) {
@@ -71,9 +72,10 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
         }
 
         if (memberDns.Count == 0) break;
+        membersFound += memberDns.Count;
 
         try {
-            group.RefreshCache(new[] {$"member;range={members.Count}-*"});
+            group.RefreshCache(new[] {$"member;range={membersFound}-*"});
         } catch (COMException e) {
             if (e.ErrorCode == unchecked((int) 0x80072020)) { //no more results
                 break;
@@ -125,6 +127,7 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
         }
     }
 
+    var membersFound = 0;
     while (true) {
         var memberDns = group.Properties["member"];
         foreach (string member in memberDns) {
@@ -161,9 +164,10 @@ public static IEnumerable<string> GetGroupMemberList(DirectoryEntry group, bool 
         }
 
         if (memberDns.Count == 0) break;
+        membersFound += memberDns.Count;
 
         try {
-            group.RefreshCache(new[] {$"member;range={members.Count}-*"});
+            group.RefreshCache(new[] {$"member;range={membersFound}-*"});
         } catch (COMException e) {
             if (e.ErrorCode == unchecked((int) 0x80072020)) { //no more results
                 break;
