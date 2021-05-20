@@ -1,0 +1,11 @@
+_id: 2cc2ed20-b970-11eb-a337-9f18a1ca70d3
+_parent: 7e0507f0-b960-11eb-8b0b-5f9340087d9a
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: >-
+  If you're using Staticman, but not Mailgun, you'll have to modify the
+  Staticman code to come up with a solution yourself. The email address will
+  have to be stored somewhere, and you don't want to store it in GitHub, since
+  that's public. So you'd need to put it in a database somewhere.
+date: '2021-05-20T13:35:00.740Z'
