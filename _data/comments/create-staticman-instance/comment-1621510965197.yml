@@ -1,0 +1,7 @@
+_id: 7e0507f0-b960-11eb-8b0b-5f9340087d9a
+_parent: 7e0507f0-b960-11eb-8b0b-5f9340087d9a
+name: Mike
+email: 3ddb72db1caae6fbbf53721a96ee5254
+url: ''
+message: "How can I continue to transform a user submitted email with md5 (so I can use their gravitar) AND get the email address in plain text so I can contact my commenters?\r\n\r\nGreat article! Thanks for the read and your work on Staticman."
+date: '2021-05-20T11:42:45.186Z'
