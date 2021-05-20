@@ -1,0 +1,7 @@
+_id: 311f0d90-b96b-11eb-8b0b-5f9340087d9a
+_parent: 7e0507f0-b960-11eb-8b0b-5f9340087d9a
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://gabescode.com'
+message: "The plain email address will be in your Mailgun account, although it's not straight-forward to find. Staticman creates a mailing list in Mailgun for each thread. The name of the mailing list looks like a GUID, but it doesn't match the GUID of the post ID that Staticman generates. I haven't looked at the code close enough to figure out how it knows which mailing list to use.\r\nI was able to find your email address in my Mailgun account by just looking at the most recently created mailing list."
+date: '2021-05-20T12:59:20.548Z'
