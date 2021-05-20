@@ -1,0 +1,10 @@
+_id: d37d1a90-b96c-11eb-b23b-b74cb2313d09
+_parent: 7e0507f0-b960-11eb-8b0b-5f9340087d9a
+name: Mike
+email: 3ddb72db1caae6fbbf53721a96ee5254
+url: ''
+message: >-
+  And what to do if you aren’t using mailgun? I hash the email so I can use
+  gravitar, but want the plain text in my private repo or maybe the pull request
+  so I can email commenters as necessary. Thanks!
+date: '2021-05-20T13:11:02.535Z'
