@@ -8,7 +8,7 @@ comments: true
 
 # {{page.category}}: {{page.title}}
 
-I decided to use Staticman for comments on this site for reasons I described in [my other article]({% post_url 2019-01-04-staticman-comments-for-jekyll %}). Staticman had a public API that anyone was free to use. However, so many people were using it that it started to hit the maximum usage that the GitHub API allows. So [it is now recommended to run your own instance](https://github.com/eduardoboucas/staticman/issues/317#issuecomment-565250060). You can host for free on Heroku. In fact, there's a nifty "Deploy to Heroku" button on the [README](https://github.com/eduardoboucas/staticman#introduction) page (which wasn't there when I first wrote this). But already have a server I could host it on.
+I decided to use Staticman for comments on this site for reasons I described in [my other article]({% post_url 2019-01-04-staticman-comments-for-jekyll %}). Staticman had a public API that anyone was free to use. However, so many people were using it that it started to hit the maximum usage that the GitHub API allows. So [it is now recommended to run your own instance](https://github.com/eduardoboucas/staticman/issues/317#issuecomment-565250060). You can host for free on Heroku. In fact, there's a nifty "Deploy to Heroku" button on the [README](https://github.com/eduardoboucas/staticman#introduction) page (which wasn't there when I first wrote this). But I already have a server I could host it on.
 
 Of course, nothing is easy, so I had a ton of trouble setting it up. A couple issues I faced were:
 
