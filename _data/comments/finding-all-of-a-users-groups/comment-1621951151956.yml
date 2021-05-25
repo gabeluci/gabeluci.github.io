@@ -1,0 +1,7 @@
+_id: 61c6fbc0-bd61-11eb-80c0-c373e9d14c35
+_parent: ddfd08f0-bccc-11eb-9eb5-cdd83433d9b5
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://www.gabescode.com'
+message: "There are many ways to create a `DirectoryEntry` object. You can read the documentation [here](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry). The most common way is to use the object's distinguished name, like `new DirectoryEntry(\"LDAP://CN=Some User,OU=Users,DC=example,DC=com\")`\r\nIf you're having trouble with your code, you can post it on Stack Overflow to get some help."
+date: '2021-05-25T13:59:11.946Z'
