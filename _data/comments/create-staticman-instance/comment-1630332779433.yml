@@ -1,0 +1,13 @@
+_id: 61195100-099c-11ec-96cd-9bcd37279d52
+_parent: 61195100-099c-11ec-96cd-9bcd37279d52
+name: worldpc-games.net
+email: c9d096cc12e26402de1eb05c0654f8a0
+url: 'https://worldpc-games.net/'
+message: >-
+  Its seems an RSA key error. While setting up @staticmanlab, my own Staticman
+  API instance (so as to test Staticman's native GitLab support), I found this
+  article very useful. Hope this helps your setup. Since the public API is in
+  trouble, I figured I'd host my own, but I'm facing this exact error message
+  too. I was following the blog post at flyinggrizzly.io too, but both it and
+  the official docs are slim on details on how to actually populate that
+date: '2021-08-30T14:12:59.420Z'
