@@ -23,7 +23,7 @@ In these examples, I'll focus on the `msDS-AllowedToActOnBehalfOfOtherIdentity` 
 
 PowerShell makes this easier by exposing a property called `PrincipalsAllowedToDelegateToAccount` in [`Get-ADUser`](https://docs.microsoft.com/en-us/powershell/module/addsadministration/get-aduser) and [`Set-ADUser`](https://docs.microsoft.com/en-us/powershell/module/addsadministration/set-aduser), which just reads and writes the `msDS-AllowedToActOnBehalfOfOtherIdentity` attribute. Even if we try to access the raw data, it gives us an [`ActiveDirectorySecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectorysecurity) object. That's handy.
 
-```powershell
+```
 PS C:\> $u = Get-ADUser SomeUsername -Properties "msDS-AllowedToActOnBehalfOfOtherIdentity"
 PS C:\> $u."msDS-AllowedToActOnBehalfOfOtherIdentity".GetType()
 
@@ -32,7 +32,7 @@ IsPublic IsSerial Name                                     BaseType
 True     False    ActiveDirectorySecurity                  System.Security.AccessControl.DirectoryObjectSecurity
 ```
 
-But it's not so obvious how to work with this attributes (and the others) in .NET. So here we'll look at two options.
+But it's not so obvious how to work with this attribute (and the others) in .NET. So here we'll look at two options.
 
 ## Getting the value from `DirectoryEntry`
 
