@@ -17,7 +17,7 @@ When it comes to programming against AD, or any LDAP directory for that matter, 
 
 Let's talk about ways you a can minimize both.
 
-While this article concentrates on .NET and specifically C#, it's really just using LDAP in the background. So the principals apply to any programming language that can make LDAP queries.
+While this article concentrates on .NET and specifically C#, it's really just using LDAP in the background. So the principles apply to any programming language that can make LDAP queries.
 
 ## Don't use `System.DirectoryServices.AccountManagement`
 
@@ -25,7 +25,7 @@ The [`AccountManagement`](https://docs.microsoft.com/en-us/dotnet/api/system.dir
 
 ## Use `System.DirectoryServices`
 
-**You have much more control** over how many network requests are made, and how much data gets retrieved by using `DirectoryEntry` and `DirectorySearcher` directly. However, you do need to be careful in how you use them, since it's easy to write code that performs poorly. We'll talk about some principals here that really apply to LDAP in general and not just .NET or Active Directory.
+**You have much more control** over how many network requests are made, and how much data gets retrieved by using `DirectoryEntry` and `DirectorySearcher` directly. However, you do need to be careful in how you use them, since it's easy to write code that performs poorly. We'll talk about some principles here that really apply to LDAP in general and not just .NET or Active Directory.
 
 ### If you ask for nothing, you get everything
 
