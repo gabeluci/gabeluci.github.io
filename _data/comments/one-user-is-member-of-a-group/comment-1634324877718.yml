@@ -1,0 +1,7 @@
+_id: 3512ed00-2deb-11ec-940e-95213ab90e43
+_parent: 3512ed00-2deb-11ec-940e-95213ab90e43
+name: Ian Dubé
+email: a5ed13acb7615ee1fdcd5b82dbd97c7c
+url: ''
+message: "Hi Gabriel,\r\nI'm trying to use your function (the one with \"tokenGroupsGlobalAndUniversal\") to find if a user in Domain B, is a member of the group in domain A (and both domain are in the same Forest).\r\n\r\nIf I check manually the member of the group, I can find my user (he is 2 level lower, in a group who is in another who is in my wanted group) but your function return a result as if the user isn't a member.\r\n\r\nI know that if I call \"GetAuthorizationGroups\" using my user principal, my group will be returned correctly (but the performance are horrible, it's why i'm trying to use a DirectorySearcher instead).\r\n\r\nEverything i've read seems to say that it should work but it's not and I have no idea why. XD\r\n\r\nDo you have an idea of what might happen here ?\r\nThanks"
+date: '2021-10-15T19:07:57.709Z'
