@@ -1,0 +1,7 @@
+_id: f36db8b0-2e23-11ec-a9e6-c7ec80863373
+_parent: 3512ed00-2deb-11ec-940e-95213ab90e43
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://www.gabescode.com'
+message: "Interesting. I can try to replicate that. So `DomainB\\User` is a member of `Group1`, and `Group1` is a member of `DomainA\\Group2`, and you are checking if `DomainB\\User` is a member of `DomainA\\Group2`, correct? I have a few questions:\r\n\r\n1. What is the scope of `Group1` and `Group2`? (domain local, global, universal)\r\n2. Is the \"Group Type\" of both `Group1` and `Group2` set to \"Security\"?\r\n3. Which domain is `Group1` on?\r\n4. You are passing `true` for the `recursive` parameter?"
+date: '2021-10-16T01:54:08.842Z'
