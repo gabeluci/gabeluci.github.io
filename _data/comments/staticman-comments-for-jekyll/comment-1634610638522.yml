@@ -1,0 +1,7 @@
+_id: 8bcf7cd0-3084-11ec-821e-ffeda76a7dd2
+_parent: a478aab0-306e-11ec-bd04-63802834f530
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://www.gabescode.com'
+message: "Yeah, I probably should merge it into the master branch. I can't remember why I didn't. I think in the main Staticman repository, the master wasn't the most up to date, so I created a branch off of the dev branch. I'm definitely not an expert with Git \U0001F642"
+date: '2021-10-19T02:30:38.515Z'
