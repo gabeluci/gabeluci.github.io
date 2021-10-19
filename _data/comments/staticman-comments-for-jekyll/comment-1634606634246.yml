@@ -1,0 +1,7 @@
+_id: 391411d0-307b-11ec-8a1f-2b109eb030e9
+_parent: 391411d0-307b-11ec-8a1f-2b109eb030e9
+name: Radek
+email: 0f9e726a1c9758a647ad78bf64711b1d
+url: ''
+message: "Thank you for pointing out about the branch !! IT WORKS.... some magic you did there hehe.\r\n\r\nBefore i was trying to deploy your \"master\" - have no idea you did not merged your changes to it. Now it works like a charm !\r\n\r\nCannot thank you enough Gabe. I must admit i was scratching my head around this one last step for a while. \r\n\r\np.s. it's not relevant now but replying to your question: yes i did all of the configuration - as i prompted before - staticman was already using the mailgun api because it was creating subscriptions list for the comment (i could see those on mailgun dashboard) - the one it did not was sending my notifications to those list --- but as of now it works a-ok\r\n\r\nCheers from Poland\r\nRadek"
+date: '2021-10-19T01:23:54.239Z'
