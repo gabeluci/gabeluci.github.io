@@ -1,0 +1,7 @@
+_id: 4e3a4030-3075-11ec-acac-4773a6afb953
+_parent: a478aab0-306e-11ec-bd04-63802834f530
+name: Radek
+email: 0f9e726a1c9758a647ad78bf64711b1d
+url: ''
+message: "Yes it does ! Last step i can't get it to work though is to Mailgun to send notification to subscribed emails. I see Staticman has created via Mailgun API a list of emails associated but no message is being sent to them when there is some reply to the comment thread.\r\n\r\nI wonder if you have any idea what might be the cause. I have everything set up correctly in Mailgun i think (i can send messages with same domain via API + curl method) It seems like staticman is not launching MAilgun or sth.\r\n\r\nI see moderation is not a problem as i received all notification from your blog no problem. Is there any specific commit/branch of Staticman you have deployed on your server or just the latest from the official repo (+ your changes of course) At this point any idea would be helpful as i cannot seem to debug this  \r\n\r\nThanks so much in advance\r\nRadek"
+date: '2021-10-19T00:41:32.727Z'
