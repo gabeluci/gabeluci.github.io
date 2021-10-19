@@ -1,0 +1,7 @@
+_id: 10ecd240-3077-11ec-93ba-7b4861839bdb
+_parent: a478aab0-306e-11ec-bd04-63802834f530
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://www.gabescode.com'
+message: "All the changes I made are in this branch of the fork I made: https://github.com/gabeluci/staticman/tree/accepted-notifications\r\n\r\nI think it's a little behind the main Staticman repository now, but that's the code I'm using.\r\n\r\nDid you create your own Mailgun account and put your API key in the Staticman config?"
+date: '2021-10-19T00:54:08.841Z'
