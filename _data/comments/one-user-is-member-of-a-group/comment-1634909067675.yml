@@ -1,0 +1,7 @@
+_id: 617e31b0-333b-11ec-8ab9-471555eedfbc
+_parent: 3512ed00-2deb-11ec-940e-95213ab90e43
+name: Ian Dubé
+email: a5ed13acb7615ee1fdcd5b82dbd97c7c
+url: ''
+message: "Hey I don't know if it change something but I've found something I didn't see before in structure.\r\n\r\nI was a bit wrong, { Group3 } is in { DomainB }, it's just that I have another group with the exact same name in DomainA (who contains other user, but not the one I look for, mine is in DomainB/Group3). Both group with the same name are member of DomainA\\Group2.\r\n\r\nThe sId are different and it's the correct one that is listed in { tokenGroupsGlobalAndUniversal } and then added in the filter.\r\n\r\nI'm not sure if that change anything since the code use the sId in the filter instead of the name so as far as I know, it should work even if 2 group in 2 domain have the same name.\r\n\r\nSo in the end, my structure look like this\r\n\r\nDomainA\\Group1 -> DomainA\\Group2 -> DomainB\\Group3 -> DomainB\\User\r\n(The scope are the same as previously stated)\r\n\r\nAnd i'm trying to find if my user is member of Group1 using \" IsUserInGroup \" (which return false right now)."
+date: '2021-10-22T13:24:27.669Z'
