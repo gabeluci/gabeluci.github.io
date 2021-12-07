@@ -41,7 +41,7 @@ Here is a simple example of returning the email address (and *only* the email ad
 public IEnumerable<string> EveryEmailAddress() {
     var search = new DirectorySearcher(new DirectoryEntry()) {
         PageSize = 1000,
-        Filter = "(objectClass=user)"
+        Filter = "(&(objectClass=user)(objectCategory=person))"
     };
     
     //make sure only the mail attribute is sent back
