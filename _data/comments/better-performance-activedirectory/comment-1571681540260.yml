@@ -3,5 +3,5 @@ _parent: 52430e30-f42e-11e9-9c53-e7c64148ee41
 name: tolsen64
 email: 563ffd08192ec8defc01a1ac83342db5
 url: ''
-message: "I used Linq to see if I got all the accounts I asked for:\r\n\r\n                List<string> lstTmp = new List<string>();\r\n                foreach (UserInfo u in lstUI)\r\n                    lstTmp.Add(u.ADID.ToLower());\r\n\r\n                // if we found all our adids, no need to keep searching domains.\r\n                if (adids.All(s => lstTmp.Contains(s)))\r\n                {\r\n                    break;\r\n                }"
+message: "I used Linq to see if I got all the accounts I asked for:\r\n\r\n```c#\r\nList<string> lstTmp = new List<string>();\r\nforeach (UserInfo u in lstUI)\r\n    lstTmp.Add(u.ADID.ToLower());\r\n\r\n// if we found all our adids, no need to keep searching domains.\r\nif (adids.All(s => lstTmp.Contains(s)))\r\n{\r\n        break;\r\n}\r\n```"
 date: '2019-10-21T18:12:20.254Z'
