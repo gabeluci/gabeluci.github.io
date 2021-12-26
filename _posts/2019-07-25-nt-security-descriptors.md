@@ -58,31 +58,9 @@ var act = (IADsSecurityDescriptor)
 
 You *can* just work with it like that, but it would be a little easier if we get it into a managed type.
 
-Remeber I mentioned that `DirectoryEntry` gives us a handy property to read/write the `ntSecurityDescriptor` attribute called [`ObjectSecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.objectsecurity), which is of type [`ActiveDirectorySecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectorysecurity). **How does `DirectoryEntry` translate the `ntSecurityDescriptor` attribute into an `ActiveDirectorySecurity` attribute?** And more importantly, how to *we* do it?
+Remeber I mentioned that `DirectoryEntry` gives us a handy property to read/write the `ntSecurityDescriptor` attribute called [`ObjectSecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.objectsecurity), which is of type [`ActiveDirectorySecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectorysecurity). Can we use that?
 
-The source code for .NET Core is now available, so we can look at [the source code for `DirectoryEntry`](https://github.com/dotnet/corefx/blob/master/src/System.DirectoryServices/src/System/DirectoryServices/DirectoryEntry.cs) to find out. The key is in the [`GetObjectSecurityFromCache`](https://github.com/dotnet/corefx/blob/master/src/System.DirectoryServices/src/System/DirectoryServices/DirectoryEntry.cs#L1078) method. It does a few things:
-
-1. Cast the [`NativeObject`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.directoryentry.nativeobject) property to [`IAdsPropertyList`](https://docs.microsoft.com/en-us/windows/win32/api/iads/nn-iads-iadspropertylist).
-2. Call [`IAdsPropertyList::GetPropertyItem`](https://docs.microsoft.com/en-us/windows/win32/api/iads/nf-iads-iadspropertylist-getpropertyitem) to retrieve the attribute, and casts it to [`IADsPropertyEntry`](https://docs.microsoft.com/en-us/windows/win32/api/iads/nn-iads-iadspropertyentry).
-3. Cast the first value in the `IADsPropertyEntry.Values` array to  `IADsPropertyValue`.
-4. Get the raw byte array of the attribute using `IADsPropertyValue.OctetString`.
-5. Use the `byte[]` to create a new `ActiveDirectorySecurity` object.
-
-Unfortunately, we can't do step 5 ourselves because [the constructor that it uses](https://github.com/dotnet/corefx/blob/a10890f4ffe0fadf090c922578ba0e606ebdd16c/src/System.DirectoryServices/src/System/DirectoryServices/ActiveDirectorySecurity.cs#L61) is marked [`internal`](https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/keywords/internal).
-
-```c#
-internal ActiveDirectorySecurity(byte[] sdBinaryForm, SecurityMasks securityMask)
-    : base(new CommonSecurityDescriptor(true, true, sdBinaryForm, 0))
-{
-    _securityMaskUsedInRetrieval = securityMask;
-}
-```
-
-So what's the next best thing?
-
-`ActiveDirectorySecurity` inhertis from [`DirectoryObjectSecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.directoryobjectsecurity), but that's an `abstract` class, so we can't use that. But it does create a [`CommonSecurityDescriptor`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.commonsecuritydescriptor) object from the `byte[]`, and that is something we can do. So we'll do that.
-
-So we just need to get the raw, binary data of the attribute and push it into the constructor for `CommonSecurityDescriptor`. We can replicate steps 1-4 of what `DirectoryEntry.GetObjectSecurityFromCache` does, but it turns out that there's an even easier way.
+The [only public constructor for `ActiveDirectorySecurity`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectorysecurity.-ctor) just creates an empty object. That's not helpful. There is a [`SetSecurityDescriptorBinaryForm`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.objectsecurity.setsecuritydescriptorbinaryform) method that could help us, but only if we had the security descriptor in a byte array. Can we get that?
 
 The [`IADsSecurityUtility`](https://docs.microsoft.com/en-us/windows/win32/api/iads/nn-iads-iadssecurityutility) interface is another COM object, designed to work with security descriptors. One of the methods it provides is [`ConvertSecurityDescriptor `](https://docs.microsoft.com/en-us/windows/win32/api/iads/nf-iads-iadssecurityutility-convertsecuritydescriptor), which **"converts a security descriptor from one format to another"**. We can use that to convert an `IADsSecurityDescriptor` to a `byte[]`.
 
@@ -94,26 +72,32 @@ var byteArray = (byte[]) secUtility.ConvertSecurityDescriptor(
                             (int)ADS_SD_FORMAT_ENUM.ADS_SD_FORMAT_RAW
                          );
 
-var security = new CommonSecurityDescriptor(true, true, byteArray, 0);
+var adSecurity = new ActiveDirectorySecurity();
+adSecurity.SetSecurityDescriptorBinaryForm(byteArray);
 ```
 
-Now you can read/write the security descriptor using the `CommonSecurityDescriptor` object. You'll likely want to work with the [`DiscretionaryAcl`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.commonsecuritydescriptor.discretionaryacl) property.
+Now you can read/write the security descriptor using the `ActiveDirectorySecurity` object. You'll likely want to use the [`GetAccessRules`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.directoryobjectsecurity.getaccessrules) method. For example, this code will loop through the access rules and just print them out to the console:
 
-> Note that you can also create a [`RawSecurityDescriptor`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.rawsecuritydescriptor) object using `new RawSecurityDescriptor(byteArray, 0)`. I really don't know the difference between `RawSecurityDescriptor` and `CommonSecurityDescriptor`. If you know why you would use one over the other, let me know in the comments.
+```c#
+foreach (ActiveDirectoryAccessRule rule in adSecurity.GetAccessRules(true, false, typeof(SecurityIdentifier))) {
+    Console.WriteLine($"{rule.IdentityReference} {rule.AccessControlType} {rule.ActiveDirectoryRights} {rule.ObjectType}");
+}
+```
+
+The [`ObjectType`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.objectaccessrule.objecttype) is a `Guid` that refers to either a [specific attribute](https://docs.microsoft.com/en-us/windows/win32/adschema/attributes-all), a [property set](https://docs.microsoft.com/en-us/windows/win32/adschema/property-sets) (a way of assigning permissions to a group of attributes at once), or an [extended right](https://docs.microsoft.com/en-us/windows/win32/adschema/extended-rights) (if the [`ActiveDirectoryRights`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.activedirectoryaccessrule.activedirectoryrights) property is set to `ExtendedRight`).
 
 ### Writing the value back
 
-If you plan on updating the value, you need to get it back into a `byte[]`. Both `RawSecurityDescriptor` and `CommonSecurityDescriptor` inherit from [`GenericSecurityDescriptor`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.genericsecuritydescriptor), which has a [`GetBinaryForm`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.genericsecuritydescriptor.getbinaryform) method, which will put a binary represenation of the security descriptor into a `byte[]` you already created. For example:
+If you plan on updating the value, you need to get it back into a `byte[]`. Fortunately, that's made easy with the [`GetSecurityDescriptorBinaryForm`](https://docs.microsoft.com/en-us/dotnet/api/system.security.accesscontrol.objectsecurity.getsecuritydescriptorbinaryform) method. For example:
 
 ```c#
-var descriptor_buffer = new byte[security.BinaryLength];
-security.GetBinaryForm(descriptor_buffer, 0);
+var newByteArray = adSecurity.GetSecurityDescriptorBinaryForm();
 ```
 
 Then you can write it back into the `DirectoryEntry` object:
 
 ```c#
-user.Properties["msDS-AllowedToActOnBehalfOfOtherIdentity"].Value = descriptor_buffer;
+user.Properties["msDS-AllowedToActOnBehalfOfOtherIdentity"].Value = newByteArray;
 user.CommitChanges();
 ```
 
@@ -131,14 +115,14 @@ var byteArray = (byte[]) secUtility.ConvertSecurityDescriptor(
                             (int) ADS_SD_FORMAT_ENUM.ADS_SD_FORMAT_RAW
                          );
 
-var security = new CommonSecurityDescriptor(true, true, byteArray, 0);
+var adSecurity = new ActiveDirectorySecurity();
+adSecurity.SetSecurityDescriptorBinaryForm(byteArray);
 
 //modify security object here
 
-var descriptor_buffer = new byte[security.BinaryLength];
-security.GetBinaryForm(descriptor_buffer, 0);
+var newByteArray = adSecurity.GetSecurityDescriptorBinaryForm();
 
-user.Properties["msDS-AllowedToActOnBehalfOfOtherIdentity"].Value = descriptor_buffer;
+user.Properties["msDS-AllowedToActOnBehalfOfOtherIdentity"].Value = newByteArray;
 user.CommitChanges();
 ```
 
@@ -158,21 +142,16 @@ search.PropertiesToLoad.Add("msDS-AllowedToActOnBehalfOfOtherIdentity");
 
 var result = search.FindOne();
 
-var security = new CommonSecurityDescriptor(
-    true,
-    true,
-    (byte[]) result.Properties["msDS-AllowedToActOnBehalfOfOtherIdentity"][0],
-    0
-);
+var adSecurity = new ActiveDirectorySecurity();
+adSecurity.SetSecurityDescriptorBinaryForm((byte[]) result.Properties["msDS-AllowedToActOnBehalfOfOtherIdentity"][0]);
 ```
 
 If we need to write the value back, we need a `DirectoryEntry` object for the account. We can use [`SearchResult.GetDirectoryEntry()`](https://docs.microsoft.com/en-us/dotnet/api/system.directoryservices.searchresult.getdirectoryentry) to do that:
 
 ```c#
-var descriptor_buffer = new byte[security.BinaryLength];
-security.GetBinaryForm(descriptor_buffer, 0);
+var newByteArray = adSecurity.GetSecurityDescriptorBinaryForm();
 
 var user = result.GetDirectoryEntry();
-user.Properties["msDS-AllowedToActOnBehalfOfOtherIdentity"].Value = descriptor_buffer;
+user.Properties["msDS-AllowedToActOnBehalfOfOtherIdentity"].Value = newByteArray;
 user.CommitChanges();
 ```
