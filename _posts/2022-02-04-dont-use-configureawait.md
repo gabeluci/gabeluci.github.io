@@ -35,7 +35,7 @@ Determining you don't need the context can be either simple, or quite complex de
 
 This is what another Stephen, Stephen Toub (a Microsoft employee), recommends in the [ConfigureAwait FAQ](https://devblogs.microsoft.com/dotnet/configureawait-faq/) under the subheading "When should I use ConfigureAwait(false)?":
 
->When writing applications, you generally want the default behavior (which is why it is the default behavior). ... This leads to the general guidance of: **if you’re writing app-level code, do not use `ConfigureAwait(false)`**
+>When writing applications, you generally want the default behavior (which is why it is the default behavior). ... This leads to the general guidance of: **if you're writing app-level code, do not use `ConfigureAwait(false)`**
 
 In my own application code, I don't bother trying to figure out where I can and can't use it. I just ignore that `ConfigureAwait` exists. Sure, there *can* be a performance improvement by using it where you can, but I really doubt that it will be a noticeable difference to any human, even if it is measurable by a timer. I don't believe the return on investment is positive.
 
@@ -43,7 +43,7 @@ In my own application code, I don't bother trying to figure out where I can and 
 
 The only exception to this is when you're writing libraries (code compiled into a DLL that will be used in other applications), as Stephen Toub points out in his article:
 
-> **if you’re writing general-purpose library code, use `ConfigureAwait(false)`**
+> **if you're writing general-purpose library code, use `ConfigureAwait(false)`**
 
 That's for two reasons:
 
@@ -52,7 +52,7 @@ That's for two reasons:
 
 And keep in mind that it's not always enough to use `ConfigureAwait(false)` on the first `await` and not the rest. Use it on *every* `await` in your library code. Stephen Toub's article under the heading "Is it ok to use ConfigureAwait(false) only on the first await in my method and not on the rest?" says, in part:
 
->  If the `await task.ConfigureAwait(false)` involves a task that’s already completed by the time it’s awaited (which is actually incredibly common), then the `ConfigureAwait(false)` will be meaningless, as the thread continues to execute code in the method after this and still in the same context that was there previously.
+>  If the `await task.ConfigureAwait(false)` involves a task that's already completed by the time it's awaited (which is actually incredibly common), then the `ConfigureAwait(false)` will be meaningless, as the thread continues to execute code in the method after this and still in the same context that was there previously.
 
 It may seem arrogant of me to disagree with Stephen Cleary on this subject: he's well respected. However, this post started out as an [answer on Stack Overflow](https://stackoverflow.com/a/62505101/1202807). Stephen Cleary commented on that post saying:
 
