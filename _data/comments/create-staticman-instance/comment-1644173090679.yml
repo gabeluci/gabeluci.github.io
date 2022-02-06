@@ -1,0 +1,13 @@
+_id: dd6f0de0-877c-11ec-84a8-5dcbff018819
+_parent: dd6f0de0-877c-11ec-84a8-5dcbff018819
+name: bernyAlife
+email: b688c464af05a8033cc8d4300161916d
+url: ''
+message: >-
+  As such, once you setup a Staticman instance, anyone can use it for their own
+  website, if they know about it. But as discussed, my VPS is strapped for
+  resources, and I just gave you all the information you need to know to use my
+  instance : so I decided to lock it down. I did that by adding this line to the
+  Apache config files for both sites HTTP and HTTPS : That should go before the
+  other directives.
+date: '2022-02-06T18:44:50.669Z'
