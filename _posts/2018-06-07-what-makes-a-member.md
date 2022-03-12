@@ -30,9 +30,9 @@ But wait, there's more.
 
 ## The primary group
 
-This one is easy to forget (or never learn), but fortunately it will likely rarely matter to you. Every user object must have a Primary Group, which is indicated by the `primaryGroupId` attribute on the user object. That attribute is set to **the RID of a group on the same domain**. That makes the user a member of that group.
+This one is easy to forget (or never learn), but fortunately it will likely rarely matter to you. Every user object must have a Primary Group, which is indicated by the `primaryGroupId` attribute on the user object. That attribute is set to **the `primaryGroupToken` attribute of a group on the same domain**. That makes the user a member of that group.
 
-> An object's Relative Identifier (RID) is the last portion of the Security Identifier (SID), which comes after the domain portion of the SID. When reading a SID string, the RID is the numbers after the last dash.
+> The `primaryGroupToken` attribute of a group is equivalent to the group's Relative Identifier (RID), which is the portion of the Security Identifier (SID) that comes after the domain portion of the SID. When reading a SID string, the RID is the numbers after the last hyphen.
 
 In most cases, the `primaryGroupId` will be `513`, which is always the RID for the `Domain Users` group. However the `primaryGroupId` can be changed.
 
