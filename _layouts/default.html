@@ -1,12 +1,30 @@
 <!doctype html>
 <html lang="{{ site.lang | default: "en-US" }}">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests;">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{% if page.category %}{{page.category}}: {% endif %}{{page.title}} | {{site.title}}</title>
-{% seo %}
+    {% seo %}
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{% if page.category %}
+                {
+                    "@type": "ListItem",
+                    "position": 1,
+                    "name": "{{page.category}}"
+                },{% endif %}
+                {
+                    "@type": "ListItem",
+                    "position": {% if page.category %}2{% else %}1{% endif %},
+                    "name": "{{page.title}}"
+                }
+            ]
+        }
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="{{ '/assets/js/lazysizes.min.js' | relative_url }}"></script>
     <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
@@ -25,13 +43,13 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-D1JF078BLY"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-      gtag('config', 'G-D1JF078BLY');
+        gtag('config', 'G-D1JF078BLY');
     </script>
-  </head>
+</head>
   <body>
     <div class="wrapper">
       <header>
