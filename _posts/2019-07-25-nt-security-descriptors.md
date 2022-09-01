@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Handling NT Security Descriptor attributes"
+title: "Handling NT Security Descriptor attributes in C#"
 category: "Active Directory"
 permalink: /active-directory/:year/:month/:day/:title:output_ext
 comments: true
