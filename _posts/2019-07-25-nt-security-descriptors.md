@@ -128,7 +128,7 @@ user.CommitChanges();
 
 ## Getting the value from `DirectorySearcher`
 
-There are a few cases (in general) where `DirectorySearcher` will gives you values in a different format than `DirectoryEntry`. This is one of those cases. In fact, `DirectorySearcher` makes it even easier on us, since it gives us the raw binary value without a fight. **That means we don't need to add a COM reference to our project.**
+There are a few cases (in general) where `DirectorySearcher` will give you values in a different format than `DirectoryEntry`. This is one of those cases. In fact, `DirectorySearcher` makes it even easier on us, since it gives us the raw binary value without a fight. **That means we don't need to add a COM reference to our project.**
 
 This example will find an account with the username `myUsername`, and create an `ActiveDirectorySecurity` object:
 
