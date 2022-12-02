@@ -1,0 +1,7 @@
+_id: bd0d9670-725e-11ed-bb4a-034584704fc9
+_parent: bd0d9670-725e-11ed-bb4a-034584704fc9
+name: Ruud
+email: f8798541898b4ab2238f939e4425dfe8
+url: ''
+message: "Good article, also agree with Daniel, I would like to know when I need the context, so I can decide wisely when to use ConfigureAndAwait with false or true.\r\nThere should be a better way of deciding than just 'application' or 'library' code."
+date: '2022-12-02T16:31:14.678Z'
