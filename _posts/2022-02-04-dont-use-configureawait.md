@@ -33,6 +33,17 @@ For applications of any kind, I believe **the advice really should be the opposi
 
 Determining you don't need the context can be either simple, or quite complex depending on what methods are called after. But even then - and this is the second reason I disagree with that advice - **just because you don't need the context after that line *right now*, doesn't mean some code won't be added later that will use the context**. You'll have to hope that whoever makes that change knows what `ConfigureAwait(false)` does, sees it, and removes it. Using `ConfigureAwait(false)` everywhere creates a maintenance risk.
 
+## A Note on Synchronization Context
+
+A couple simple examples of needing the synchronization context are:
+
+1. Changing a UI control in a Windows Forms or WPF project
+2. Accessing `HttpContext.Current` in an ASP.NET (not Core) project
+
+Doing one of those things after the use of `await` with `ConfigureAwait(false)` *might* throw an exception. In the case of a Windows Forms or WPF app, a UI control can only be changed by the thread that created it. The synchronization context ensures that the continuation runs of the same thread. However, if you use `ConfigureAwait(false)`, you tell it that you don't care where it resumes, so it *might* resume on the same thread, or might not. **Using `ConfigureAwait(false)` leaves it up to chance whether an exception is thrown, making your debugging more difficult.**
+
+If you'd like to read more about synchronization context, you can read the article [What is Synchronization Context?](https://hamidmosalla.com/2018/06/24/what-is-synchronizationcontext/) by Hamid Mosalla. If you'd like to dig even deeper and see some of the code that goes behind a synchronization context, you can read the article [Exploring the async/await State Machine – Synchronization Context](https://vkontech.com/exploring-the-async-await-state-machine-synchronization-context/) by Vasil Kosturski.
+
 ## Conclusion
 
 This is what another Stephen, Stephen Toub (a Microsoft employee), recommends in the [ConfigureAwait FAQ](https://devblogs.microsoft.com/dotnet/configureawait-faq/) under the subheading "When should I use ConfigureAwait(false)?":
