@@ -1,0 +1,7 @@
+_id: f88d27f0-0535-11ee-98da-3bd2869b844b
+_parent: f88d27f0-0535-11ee-98da-3bd2869b844b
+name: Aleksandar
+email: e0b12115247e60096a4ba0631c153b8e
+url: ''
+message: "The text is missing to explain default behavior in .NET Framework and .NET Core which is the key to understand the difference in what you should or should not use. Second there has to be an explanation over what is going on in .NET Standard or .NET Core or .NET Framework, which one you can mix with which one and where the problem of using ConfigureAwait even appears.\r\nI have not seen such an article yet."
+date: '2023-06-07T13:19:46.103Z'
