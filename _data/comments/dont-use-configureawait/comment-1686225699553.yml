@@ -1,0 +1,7 @@
+_id: 39929190-05f4-11ee-aac5-d53761af66f6
+_parent: f88d27f0-0535-11ee-98da-3bd2869b844b
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://www.gabescode.com'
+message: "It comes down to whether there is a synchronization context you can actually use. In any library code, regardless of which framework you're using, there will never be a context you can use, which is why you would always use `ConfigureAwait(false)` in library code.\r\n\r\nWith ASP.NET, there is a synchronization context in .NET Framework, but none in ASP.NET Core.\r\n\r\nIn any UI application, regardless of framework, there will always be a synchronization context since UI updates must happen on a single thread.\r\n\r\nThis is why you won't see different advice for different frameworks. Async/await is a feature of the C# language, not the framework. Whether `ConfigureAwait(false)` does anything or not depends on whether there is a synchronization context, which, in turn, depends on the type of application. The only type of application where the framework changes whether there is a synchronization context is in ASP.NET."
+date: '2023-06-08T12:01:39.545Z'
