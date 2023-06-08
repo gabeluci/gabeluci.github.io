@@ -1,0 +1,7 @@
+_id: d0226c20-05f4-11ee-aac5-d53761af66f6
+_parent: bd0d9670-725e-11ed-bb4a-034584704fc9
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://www.gabescode.com'
+message: "Sorry I never replied sooner.\r\n\r\nIn library code, you *can never* use the context, so you should always use `ConfigureAwait(false)`.\r\n\r\nIn application code, whether you need the context depends entirely on your code - you might need it, or you might not. Since you wrote this, I added a section on synchronization context.\r\n\r\nBut my point in this article is that you will spend more time than it's worth trying to use `ConfigureAwait(false)` everywhere you can, and you will create a maintenance risk if you use it, then later someone changes the code after that to use the context and you end up with a bug. This is why I recommend that you never use it in application code. You will never notice a difference in speed."
+date: '2023-06-08T12:05:52.095Z'
