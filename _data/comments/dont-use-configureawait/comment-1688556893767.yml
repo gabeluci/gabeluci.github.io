@@ -1,0 +1,7 @@
+_id: f596cf80-1b27-11ee-aa8b-e3e5784b1450
+_parent: f596cf80-1b27-11ee-aa8b-e3e5784b1450
+name: Hardy Hobeck
+email: 887480a4c053ea9bd01608ed451d735a
+url: ''
+message: "Actually, I'm not agree with your arguments. The semantic meaning of defining ConfigureAwait(false) is that you don't care about the synchronization context. If you skip the line then the default value ConfigureAwait(true) applies which means you care about the context (because this was the decision of Microsoft). Code should be clear and the intention needs to be expressed so everyone is knowing what the code does. If you don't do this then the code is not accurate and wrong in my opinion. I have figuring out so many deadlocks in production because of this issue (of course I know not mixing synchronous and asynchronous calls fix this but in real world application no one can give this assurance ;)). Thus, using ConfigureAwait(false) is a second line of defense (write code which is defensive).\r\n\r\n1. Beginnners:\r\nNot using a feature or using a feature with a different intention because some beginner could use it somewhere else in a wrong way is not a good advice.\r\n\r\n2. Maintenance Risk\r\nNormally if the code is self-explained without any separation of concern violations, then it should fit on half of the screen. Means a person who maintaining the code will see it. Anyway, instead of explaining a fictive scenario in future you should explain problems which happening in present."
+date: '2023-07-05T11:34:53.761Z'
