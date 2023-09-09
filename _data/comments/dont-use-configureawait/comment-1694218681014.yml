@@ -1,0 +1,12 @@
+_id: 55c42680-4ea6-11ee-b078-571b0202789e
+_parent: 55c42680-4ea6-11ee-b078-571b0202789e
+name: Barry Hynum
+email: 18ed35b6b6d437a638151a452809cde2
+url: ''
+message: >-
+  I needed the VS2019 DTE2 for IDE events. I used
+  package.GetServiceAsync(GetType(DTE)).ConfigureAwait(false))... the Default.
+  When I did a breakpoint on that line then stepped through, my DTE events all
+  worked. W/o the breakpoint it failed. I changed ConfigureAwait(false) to True.
+  All worked fine. This may be an "obvious" to the experts. It was not for me.
+date: '2023-09-09T00:18:01.007Z'
