@@ -1,0 +1,12 @@
+_id: da7b27f0-894f-11ee-9981-83741f8c5f0d
+_parent: 240a1d00-8922-11ee-8321-1104d32bcaff
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+url: 'https://www.gabescode.com'
+message: >-
+  If your 3 class libraries will only ever be used in your web application, then
+  you don't need to use `ConfigureAwait(false)`. But if you intend for those
+  libraries to be used in any application in the future, then you should use
+  `ConfigureAwait(false)` on every `await` in those libraries. In the web
+  project, there's no reason to use it.
+date: '2023-11-22T15:57:36.048Z'
