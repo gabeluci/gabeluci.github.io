@@ -1,0 +1,6 @@
+_id: 78e08f60-e239-11ee-abff-2d66ebf1a0ee
+_parent: 7bd90fe0-e22e-11ee-8318-4f057acc716e
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+message: "My sample code above shows how to do the paging. First is asks for the members:\r\n\r\n```\r\ngroup.RefreshCache(new[] { \"member\" });\r\n```\r\n\r\nThen it enters a loop that eventually asks for the next batch, using this:\r\n\r\n\r\n```\r\ngroup.RefreshCache(new[] {$\"member;range={membersFound}-*\"});\r\n```\r\n\r\nOn the first iteration of the loop, that will be `\"member;range=1500-*\"`, meaning, \"give me the members skipping the first 1500\". It continues in that loop until an error is thrown that indicates there are no more members."
+date: '2024-03-14T19:31:36.856Z'
