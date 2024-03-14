@@ -1,0 +1,6 @@
+_id: 7bd90fe0-e22e-11ee-8318-4f057acc716e
+_parent: 7bd90fe0-e22e-11ee-8318-4f057acc716e
+name: Edwin
+email: e1344d29d4bad2ebac2293f4509e06f2
+message: "Hi! Thanks for this post, it’s helped me to greatly improve the speed of our code. I’m having some trouble with getting results when the group exceeds over 1500 members. And I’m struggling to see how I can implement a paging query or a simple skip and take.\r\n\r\nAny thoughts on this?"
+date: '2024-03-14T18:12:57.555Z'
