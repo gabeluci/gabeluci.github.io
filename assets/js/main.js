@@ -1,3 +1,4 @@
+var numSubmit = 0;
 $(function() {
     //Add links to all headings
     var headings = document.querySelectorAll('h2[id],h3[id],h4[id]');
@@ -10,10 +11,26 @@ $(function() {
         heading.appendChild(linkIcon);
     };
 
+    $("#comment-form-message").on("change", function() {
+        numSubmit = 0;
+        hideAlert();
+    });
+    
     // Static comments
-    $("#comment-form").submit(function() {
+    $("#comment-form").submit(function(e) {
         var form = this;
+        var comment = document.getElementById("comment-form-message").value.toUpperCase();
+        if (numSubmit == 0 && (comment.indexOf("HTTP:") > -1 || comment.indexOf("HTTPS:") > -1)) {
+            numSubmit++;
+            $("#respond .js-notice")
+                .removeClass("success")
+                .addClass("danger");
+            showAlert("<strong>Your comment includes a link.</strong><br>If your comment is being made for the sole purpose of advertising, your comment will not be approved. Please save us both the time and stop now. If your comment legitimately has something to do with the content of this page, just hit Submit again.");
+            e.preventDefault();
+            return false;
+        }
 
+        hideAlert();
         $(form).addClass("disabled");
         $("#comment-form-submit").html(
         'Sending...'
@@ -26,11 +43,11 @@ $(function() {
         contentType: "application/x-www-form-urlencoded",
         success: function(data) {
             $("#comment-form-submit")
-            .html("Submitted")
-            .addClass("btn--disabled");
+                .html("Submitted")
+                .addClass("btn--disabled");
             $("#respond .js-notice")
-            .removeClass("danger")
-            .addClass("success");
+                .removeClass("danger")
+                .addClass("success");
             $("#respond form").hide()[0].reset();
             showAlert(
                 '<strong>Thanks for your comment!</strong><br>It is <a href="https://github.com/gabeluci/gabeluci.github.io/pulls">currently pending</a> and will show on the site once approved. You will be notified if your comment is approved.'
@@ -40,8 +57,8 @@ $(function() {
             console.log(err);
             $("#comment-form-submit").html("Submit Comment");
             $("#respond .js-notice")
-            .removeClass("success")
-            .addClass("danger");
+                .removeClass("success")
+                .addClass("danger");
             showAlert(
                 "<strong>Sorry, there was an error with your submission.</strong><br>Please make sure all required fields have been completed and try again."
             );
