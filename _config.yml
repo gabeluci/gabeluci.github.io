@@ -3,6 +3,7 @@ theme: jekyll-theme-dinky
 title: Gabe's Code
 description: Stuff I've learned along the way
 comments_locked: false
+timezone: America/Toronto
 
 kramdown:
   hard_wrap: true
