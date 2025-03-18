@@ -1,0 +1,16 @@
+_id: 8a4f0900-0422-11f0-9224-0b597ecda9be
+_parent: 8a4f0900-0422-11f0-9224-0b597ecda9be
+name: Matt
+email: a9bb44a91abffe64a133bc0f977844b7
+message: >-
+  I have only a vague idea of what a synchronization context is or when I'd need
+  to control it. (Actually I'd say I have a pretty good idea of what they are,
+  but a hazy idea of how the C# implementation and library support works.) But
+  say I have a WinForms UI element (e.g. Button) event handler that contains
+  awaited calls to a lower level method. I obviously want those awaits to
+  continue on the UI thread, so no ConfigureAwait call there. *But* if the lower
+  level methods that are awaited also contain await calls their continuations
+  will sometimes lock up the UI thread. I don't really understand why, but if I
+  add a ConfigureAwait(false) to the lower level await, it usually prevents the
+  locking up.
+date: '2025-03-18T17:58:05.007Z'
