@@ -1,0 +1,8 @@
+_id: 4f9ca560-0431-11f0-a496-350066f7d698
+_parent: 8a4f0900-0422-11f0-9224-0b597ecda9be
+name: Gabe
+email: e09276b9edb245e928e7163b27b15691
+message: >-
+  Something's off then. Is any of your code using `.Result` or `.Wait()` on a
+  `Task`? That would deadlock when used alongside `await`.
+date: '2025-03-18T19:43:48.897Z'
