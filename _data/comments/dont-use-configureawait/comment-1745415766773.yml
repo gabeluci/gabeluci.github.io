@@ -1,6 +1,23 @@
+---
 _id: d6da72e0-2048-11f0-92d7-d1870d772eb1
 _parent: 8a4f0900-0422-11f0-9224-0b597ecda9be
 name: Jm
 email: 73444d6da4e960f1f7d41d3201b12d2c
-message: "@Matt \r\n\r\nIt may either be a deadlock if you at any point on the lower stack tries to away syncroniously for a thing.\r\nBut it may also be something that just takes up the thread.\r\n\r\nThe thing is, if you start a task from the UI with tasks, when not using ConfigureAway(false), then all continuations requires the the context, and hence requires the UI Thread.\r\n\r\nSo lets say that you hit e.g. some code that processes an image by applying a given kernel over it:\r\nfor(int x; x < img.Width; x++)\r\n  for(int y; y < img.Height; y++)\r\n    ProcessKernel(img, x, y, kernel);\r\n\r\nAnd that image is big, then you will block the UI for as long as that process take, as your not releasing the context for each step here.\r\n\r\nWhich is also why I would not advocate for the advice given here. Instead anything that does not interact with a UI component is Library code in my mind and it should not be writte such that it requires the context, why anyone would ever do that is beyond me."
-date: '2025-04-23T13:42:46.768Z'
+message: >-
+  @Matt
+  
+  It may either be a deadlock if you at any point on the lower stack tries to away syncroniously for a thing.
+  But it may also be something that just takes up the thread.
+  
+  The thing is, if you start a task from the UI with tasks, when not using ConfigureAway(false), then all continuations requires the the context, and hence requires the UI Thread.
+  
+  So lets say that you hit e.g. some code that processes an image by applying a given kernel over it:
+  
+      for(int x; x < img.Width; x++)
+        for(int y; y < img.Height; y++)
+          ProcessKernel(img, x, y, kernel);
+  
+  And that image is big, then you will block the UI for as long as that process take, as your not releasing the context for each step here.
+  
+  Which is also why I would not advocate for the advice given here. Instead anything that does not interact with a UI component is Library code in my mind and it should not be writte such that it requires the context, why anyone would ever do that is beyond me.
+date: 2025-04-23T13:42:46.768Z
