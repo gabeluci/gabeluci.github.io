@@ -21,6 +21,11 @@ $(function() {
         var form = this;
         var comment = document.getElementById("comment-form-message").value.toUpperCase();
         if (numSubmit == 0 && (comment.indexOf("HTTP:") > -1 || comment.indexOf("HTTPS:") > -1)) {
+            if (comment.indexOf(".RU/") > -1 || comment.indexOf(".RU\"") > -1 || document.getElementById("comment-form-name").value.toUpperCase() == "LAVILLLOP") {
+                $(form).addClass("disabled");
+                e.preventDefault();
+                return false;
+            }
             numSubmit++;
             $("#respond .js-notice")
                 .removeClass("success")
@@ -37,33 +42,33 @@ $(function() {
         );
 
         $.ajax({
-        type: $(this).attr("method"),
-        url: $(this).attr("action"),
-        data: $(this).serialize(),
-        contentType: "application/x-www-form-urlencoded",
-        success: function(data) {
-            $("#comment-form-submit")
-                .html("Submitted")
-                .addClass("btn--disabled");
-            $("#respond .js-notice")
-                .removeClass("danger")
-                .addClass("success");
-            $("#respond form").hide()[0].reset();
-            showAlert(
-                '<strong>Thanks for your comment!</strong><br>It is <a href="https://github.com/gabeluci/gabeluci.github.io/pulls">currently pending</a> and will show on the site once approved. You will be notified if your comment is approved.'
-            );
-        },
-        error: function(err) {
-            console.log(err);
-            $("#comment-form-submit").html("Submit Comment");
-            $("#respond .js-notice")
-                .removeClass("success")
-                .addClass("danger");
-            showAlert(
-                "<strong>Sorry, there was an error with your submission.</strong><br>Please make sure all required fields have been completed and try again."
-            );
-            $(form).removeClass("disabled");
-        }
+            type: $(this).attr("method"),
+            url: $(this).attr("action"),
+            data: $(this).serialize(),
+            contentType: "application/x-www-form-urlencoded",
+            success: function(data) {
+                $("#comment-form-submit")
+                    .html("Submitted")
+                    .addClass("btn--disabled");
+                $("#respond .js-notice")
+                    .removeClass("danger")
+                    .addClass("success");
+                $("#respond form").hide()[0].reset();
+                showAlert(
+                    '<strong>Thanks for your comment!</strong><br>It is <a href="https://github.com/gabeluci/gabeluci.github.io/pulls">currently pending</a> and will show on the site once approved. You will be notified if your comment is approved.'
+                );
+            },
+            error: function(err) {
+                console.log(err);
+                $("#comment-form-submit").html("Submit Comment");
+                $("#respond .js-notice")
+                    .removeClass("success")
+                    .addClass("danger");
+                showAlert(
+                    "<strong>Sorry, there was an error with your submission.</strong><br>Please make sure all required fields have been completed and try again."
+                );
+                $(form).removeClass("disabled");
+            }
         });
 
         return false;
