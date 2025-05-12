@@ -95,7 +95,11 @@ function copyTextFromElement(e) {
         range.selectNode(document.getElementById(e));
         window.getSelection().removeAllRanges();
         window.getSelection().addRange(range);
-        document.execCommand("copy");
+        if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(window.getSelection().toString());
+        } else {
+            document.execCommand("copy");
+        }
         window.getSelection().removeAllRanges();
     }
 }
@@ -109,6 +113,15 @@ function toggleDisplay(e) {
     } else {
         e.style.display = "none";
     }
+}
+
+function verifyCaptcha(response) {
+    if(response.length == 0) return;
+
+    var submitButton = $("#comment-form-submit");
+    submitButton.removeAttr("disabled");
+    submitButton.attr("aria-disabled", "false");
+    submitButton.attr("type", "submit");
 }
 
 // Staticman comment replies

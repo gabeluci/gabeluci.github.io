@@ -32,8 +32,8 @@
       <input type="hidden" name="options[reCaptcha][siteKey]" value="{{ site.reCaptcha.siteKey }}">
       <input type="hidden" name="options[reCaptcha][secret]" value="{{ site.reCaptcha.secret }}">
       <input type="hidden" name="options[subscribe]" value="email">
-      <div class="g-recaptcha form__group" data-sitekey="{{ site.reCaptcha.siteKey }}"></div>
-      <button type="submit" id="comment-form-submit">Submit comment</button>
+      <div class="g-recaptcha form__group" data-sitekey="{{ site.reCaptcha.siteKey }}" data-callback="verifyCaptcha"></div>
+      <button type="button" disabled id="comment-form-submit" class="btn" aria-disabled="true">Submit comment</button>
     </form>
     <div class="hidden js-notice notice" style="margin-top:1em">
       <p class="js-notice-text"></p>
