@@ -122,6 +122,7 @@ function verifyCaptcha(response) {
     submitButton.removeAttr("disabled");
     submitButton.attr("aria-disabled", "false");
     submitButton.attr("type", "submit");
+    $("#comment-form").attr("action", "https://comments.gabescode.com/v2/entry/gabeluci/gabeluci.github.io/master/comments");
 }
 
 // Staticman comment replies
